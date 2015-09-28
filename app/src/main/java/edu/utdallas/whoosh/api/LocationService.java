@@ -44,14 +44,14 @@ public interface LocationService {
     List<NodeGroup> getGroupsByType(GroupType type);
 
     /**
-     * returns a {@link BitmapDescriptor} for the top-level map graphical asset
+     * returns a {@link MapImage} for the top-level map
      */
-    BitmapDescriptor getCampusMap();
+    MapImage getCampusMap();
 
     /**
-     * given a {@link NodeGroup} and {@code floor} index, returns a {@link BitmapDescriptor} for the
-     * map of that building/floor graphical asset
+     * given a {@link NodeGroup} and {@code floor} index, returns a {@link MapImage} for the
+     * map of that building/floor
      */
-    BitmapDescriptor getGroupMap(NodeGroup group, Integer floor);
+    MapImage getGroupMap(NodeGroup group, Integer floor);
 
 }

@@ -1,5 +1,7 @@
 package edu.utdallas.whoosh.api;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 /**
@@ -34,5 +36,11 @@ public interface NodeGroup {
      * the initially selected level of this group (typically the "ground" level)
      */
     Integer getDefaultFloor();
+
+    /**
+     * the center latitude/longitude of this group; could be used to provide a marker/control to switch
+     * from global map to detailed maps (for this node group)
+     */
+    LatLng getCenterCoordinates();
 
 }
