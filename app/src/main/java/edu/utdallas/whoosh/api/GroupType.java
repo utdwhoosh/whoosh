@@ -1,7 +1,7 @@
 package edu.utdallas.whoosh.api;
 
 /**
- * An enumeration listing the various types of {@link NodeGroup}s.
+ * An enumeration listing the various types of {@link INodeGroup}s.
  *
  * Created by sasha on 9/22/15.
  */

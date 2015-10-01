@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An enumeration listing the various types of {@link Node}s.
+ * An enumeration listing the various types of {@link INode}s.
  *
  * Created by sasha on 9/21/15.
  */
@@ -31,15 +31,15 @@ public enum NodeType {
     }
 
     /**
-     * a flag indicating whether this type is a valid origin/destination (see {@link Route#getOrigin()}
-     * and {@link Route#getDestination()})
+     * a flag indicating whether this type is a valid origin/destination (see {@link IRoute#getOrigin()}
+     * and {@link IRoute#getDestination()})
      */
     public boolean isEndpoint() {
         return this.endpoint;
     }
 
     /**
-     * a {@link List} of types valid as origins/destinations (see {@link LocationService#searchNodesByTypes(String, List)})
+     * a {@link List} of types valid as origins/destinations (see {@link ILocationService#searchNodesByTypes(String, List)})
      */
     public static List<NodeType> getEndpointTypes() {
 
