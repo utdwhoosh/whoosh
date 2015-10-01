@@ -69,7 +69,7 @@ public class NodeManager {
      * @return list of nodes
      */
     public List<INode> getNodesFromGroup(INodeGroup group){
-        return getNodes(nodeGroups.get(group));
+        return getNodes(nodeGroups.get(group.getName()));
     }
 
     /**
