@@ -1,4 +1,4 @@
-package com.utdreqeng.whoosh.whoosh;
+package edu.utdallas.woosh.appservices;
 
 import com.google.android.gms.maps.model.LatLng;
 import java.util.List;

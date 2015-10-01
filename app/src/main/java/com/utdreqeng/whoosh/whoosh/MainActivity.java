@@ -9,7 +9,10 @@ import android.view.MenuItem;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
-public class whooshApplication extends AppCompatActivity  {
+import edu.utdallas.woosh.appservices.Node;
+import edu.utdallas.woosh.appservices.NodeManager;
+
+public class MainActivity extends AppCompatActivity  {
 
     //Parse App ID and client key
     public static final String PARSE_APPLICATION_ID = "YB7DqZB3O0LfmIKzd9NzMQ6uhIXRhoawgK7p5B1M";

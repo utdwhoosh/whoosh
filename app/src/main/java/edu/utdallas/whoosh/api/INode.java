@@ -1,7 +1,7 @@
 package edu.utdallas.whoosh.api;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.utdreqeng.whoosh.whoosh.Node;
+import edu.utdallas.woosh.appservices.Node;
 
 import java.util.List;
 
