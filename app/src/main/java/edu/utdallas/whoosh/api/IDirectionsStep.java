@@ -8,9 +8,9 @@ package edu.utdallas.whoosh.api;
 public interface IDirectionsStep {
 
     /**
-     * the starting {@link INode} of this step
+     * the starting {@link Node} of this step
      */
-    INode getNode();
+    Node getNode();
 
     /**
      * distance from this step to the next

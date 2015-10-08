@@ -2,17 +2,15 @@ package edu.utdallas.woosh.appservices;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.security.acl.Group;
 import java.util.List;
 
 import edu.utdallas.whoosh.api.GroupType;
-import edu.utdallas.whoosh.api.INodeGroup;
 
 
 /**
  * Created by Marie on 9/30/2015.
  */
-public class NodeGroup implements INodeGroup{
+public class NodeGroup implements edu.utdallas.whoosh.api.NodeGroup {
     private String id;
     private String name;
     private GroupType type;

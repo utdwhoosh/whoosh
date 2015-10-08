@@ -16,7 +16,7 @@ public interface IDirections {
     IRoute getRoute();
 
     /**
-     * a set of steps, each of which represent a single {@link INode} in the {@link IRoute}
+     * a set of steps, each of which represent a single {@link Node} in the {@link IRoute}
      */
     List<IDirectionsStep> getSteps();
 

@@ -26,10 +26,9 @@ public class MainActivity extends AppCompatActivity  {
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_KEY);
 
-        //Test Parse connection
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
+        // Register your parse models
+        ParseObject.registerSubclass(Node.class);
+
 
         setContentView(R.layout.activity_main);
     }

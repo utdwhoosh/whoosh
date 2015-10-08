@@ -1,7 +1,6 @@
 package edu.utdallas.whoosh.api;
 
 import com.google.android.gms.maps.model.LatLng;
-import edu.utdallas.woosh.appservices.Node;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
  *
  * Created by sasha on 9/20/15.
  */
-public interface INode {
+public interface Node {
 
     /**
      * a natural key
@@ -23,9 +22,9 @@ public interface INode {
     LatLng getCoordinates();
 
     /**
-     * the {@link INodeGroup} this node belongs to, such as the {@link GroupType#Building} "ECSS"
+     * the {@link NodeGroup} this node belongs to, such as the {@link GroupType#Building} "ECSS"
      */
-    INodeGroup getGroup();
+    NodeGroup getGroup();
 
     /**
      * a second-level grouping this node belongs to, such as {@link NodeType#Room} "2.123"
@@ -45,7 +44,7 @@ public interface INode {
     /**
      * a {@link List} of nodes directly routable from this one
      */
-    List<Node> getAdjacentNodes();
+    List<edu.utdallas.woosh.appservices.Node> getAdjacentNodes();
 
     /**
      * a vertical qualifier for this geographic point, expressed in terms of its floor id within that building;

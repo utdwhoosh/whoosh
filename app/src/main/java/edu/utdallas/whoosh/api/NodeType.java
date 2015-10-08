@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An enumeration listing the various types of {@link INode}s.
+ * An enumeration listing the various types of {@link Node}s.
  *
  * Created by sasha on 9/21/15.
  */
