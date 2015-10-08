@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import edu.utdallas.whoosh.api.Node;
-import edu.utdallas.whoosh.api.NodeGroup;
+import edu.utdallas.whoosh.api.INode;
+import edu.utdallas.whoosh.api.INodeGroup;
 import edu.utdallas.whoosh.api.NodeType;
 
 /**

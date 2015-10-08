@@ -1,6 +1,5 @@
 package com.utdreqeng.whoosh.whoosh;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +9,6 @@ import com.parse.Parse;
 import com.parse.ParseObject;
 
 import edu.utdallas.woosh.appservices.Node;
-import edu.utdallas.woosh.appservices.NodeManager;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -27,7 +25,7 @@ public class MainActivity extends AppCompatActivity  {
         Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_KEY);
 
         // Register your parse models
-        ParseObject.registerSubclass(Node.class);
+        //ParseObject.registerSubclass(Node.class);
 
 
         setContentView(R.layout.activity_main);

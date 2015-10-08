@@ -4,12 +4,14 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
+import edu.utdallas.woosh.appservices.NodeGroup;
+
 /**
  * Data interface that represents a routable geographic point, as well as the various data describing it.
  *
  * Created by sasha on 9/20/15.
  */
-public interface Node {
+public interface INode {
 
     /**
      * a natural key

@@ -5,11 +5,11 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 /**
- * Data interface that represents a group of {@link Node}s, such as the {@link GroupType#Building} "ECSS"
+ * Data interface that represents a group of {@link INode}s, such as the {@link GroupType#Building} "ECSS"
  *
  * Created by sasha on 9/21/15.
  */
-public interface NodeGroup {
+public interface INodeGroup {
 
     /**
      * natural key, such as "ECSS"

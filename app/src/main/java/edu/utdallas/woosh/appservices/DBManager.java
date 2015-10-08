@@ -4,10 +4,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.util.ArrayList;
 import java.util.List;
-import edu.utdallas.whoosh.api.Node;
-import edu.utdallas.whoosh.api.NodeGroup;
 import edu.utdallas.whoosh.api.NodeType;
 
 /**
@@ -22,15 +23,15 @@ public class DBManager {
     /**
      * Saves a node into Parse
      * @param node - Node
-     */
+
     public void saveNode(Node node){
         node.saveInBackground();
-    }
+    }*/
 
 
     /**
      * Save a node into Parse using all the params
-     */
+
     public void saveNode(String id, LatLng coordinates, NodeGroup group, String subgroup,
                          String name, NodeType type, List<Node> adjacentNodes, Integer floor) {
         Node node = new Node();
@@ -43,10 +44,9 @@ public class DBManager {
         node.put("adjacentNodes", adjacentNodes);
         node.put("floor", floor);
         node.saveInBackground();
-    }
+    }*/
 
-
-    /**query for single node by Parse Object ID*/
+    /**query for single node by Parse Object ID
     public void getNode(String objID){
         ParseQuery<Node> query = ParseQuery.getQuery("Node");
         query.getInBackground(objID, new GetCallback<Node>() {
@@ -59,22 +59,38 @@ public class DBManager {
                 }
             }
         });
-    }
+    }*/
 
     /**Queries for all objects of type Node
-     * then uses NodeManager to store list of Nodes
+     * creates a Node node object for each ParseObject object and adds it to a list of nodes
+     * then uses NodeManager to store the list.
      */
     public void init(){
-        ParseQuery<Node> query = ParseQuery.getQuery("Node");
-        query.findInBackground(new FindCallback<Node>() {
-            public void done(List<Node> nodes, ParseException e) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> parseNodes, ParseException e) {
                 if (e == null) {
-                    //NodeManager.getInstance().putNodes(nodes);
+                    List<Node> nodes = new ArrayList<Node>();
+                    for(ParseObject object: parseNodes){
+                        Node node = new Node(object);
+                        nodes.add(node);
+                    }
+                    NodeManager.getInstance().putNodes(nodes);
                 } else {
-                    //objectRetrievalFailed();
+                    //something went wrong
                 }
             }
         });
+    }
+
+
+    public static DBManager getInstance(){
+
+        if(instance==null){
+            instance = new DBManager();
+        }
+
+        return instance;
     }
 }
 

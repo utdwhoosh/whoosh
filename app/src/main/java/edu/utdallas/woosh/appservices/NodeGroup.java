@@ -1,16 +1,21 @@
 package edu.utdallas.woosh.appservices;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseObject;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.utdallas.whoosh.api.GroupType;
+import edu.utdallas.whoosh.api.INodeGroup;
 
 
 /**
  * Created by Marie on 9/30/2015.
  */
-public class NodeGroup implements edu.utdallas.whoosh.api.NodeGroup {
+public class NodeGroup implements INodeGroup {
     private String id;
     private String name;
     private GroupType type;
@@ -27,6 +32,15 @@ public class NodeGroup implements edu.utdallas.whoosh.api.NodeGroup {
         this.floors = floors;
         this.defaultFloor = defaultFloor;
         this.centerCoordinates = centerCoordinates;
+    }
+
+    NodeGroup(ParseObject object){
+        this.id = object.getString("id");
+        this.name = object.getString("name");
+        this.type = GroupType.valueOf(object.getString("grouptype"));
+        this.floors = new ArrayList<Integer>(); floors = object.getList("floors");
+        this.defaultFloor = object.getInt("defaultfloor");
+        this.centerCoordinates = new LatLng(object.getParseGeoPoint("centerCoordinates").getLatitude(), object.getParseGeoPoint("centerCoordinates").getLongitude());
     }
 
     /**
