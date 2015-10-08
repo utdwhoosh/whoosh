@@ -20,60 +20,51 @@ public class DBManager {
 
     private static DBManager instance = null;
 
-    /**
-     * Saves a node into Parse
-     * @param node - Node
 
-    public void saveNode(Node node){
-        node.saveInBackground();
-    }*/
+    public void init(){
+        initNodeGroups();
+        initNodes();
+    }
 
 
-    /**
-     * Save a node into Parse using all the params
-
-    public void saveNode(String id, LatLng coordinates, NodeGroup group, String subgroup,
-                         String name, NodeType type, List<Node> adjacentNodes, Integer floor) {
-        Node node = new Node();
-        node.put("id", id);
-        node.put("coordinates", coordinates);
-        node.put("group", group);
-        node.put("subgroup", subgroup);
-        node.put("name", name);
-        node.put("type", type);
-        node.put("adjacentNodes", adjacentNodes);
-        node.put("floor", floor);
-        node.saveInBackground();
-    }*/
-
-    /**query for single node by Parse Object ID
-    public void getNode(String objID){
-        ParseQuery<Node> query = ParseQuery.getQuery("Node");
-        query.getInBackground(objID, new GetCallback<Node>() {
-            public void done(Node node, ParseException e) {
+    /**retrieves all NodeGroup ParseObjects from Parse
+     *  & adds them to NodeManager's list of NodeGroups
+     */
+    private void initNodeGroups(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> parseNodeGroups, ParseException e) {
                 if (e == null) {
-                    //node contains node data
-                    NodeManager.getInstance().putNode(node);
+                    for (ParseObject object : parseNodeGroups) {
+                        NodeGroup nodegroup = new NodeGroup(object);
+                        NodeManager.getInstance().addNodeGroup(nodegroup);
+                    }
                 } else {
-                    // something went wrong
+                    //something went wrong
                 }
             }
         });
-    }*/
+    }
 
-    /**Queries for all objects of type Node
-     * creates a Node node object for each ParseObject object and adds it to a list of nodes
-     * then uses NodeManager to store the list.
+    /**retrieves all Node ParseObjects from Parse
+     * creates a list of nodes with them, and adds the list to ModeManager
      */
-    public void init(){
+    private void initNodes(){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> parseNodes, ParseException e) {
                 if (e == null) {
                     List<Node> nodes = new ArrayList<Node>();
+                    //instantiate each node
                     for(ParseObject object: parseNodes){
                         Node node = new Node(object);
                         nodes.add(node);
+                    }
+                    //set each node's adjacent nodes
+                    int i = 0;
+                    for(ParseObject object: parseNodes){
+                        nodes.get(i).setAdjacentNodes(object);
+                        i++;
                     }
                     NodeManager.getInstance().putNodes(nodes);
                 } else {
@@ -82,8 +73,6 @@ public class DBManager {
             }
         });
     }
-
-
     public static DBManager getInstance(){
 
         if(instance==null){

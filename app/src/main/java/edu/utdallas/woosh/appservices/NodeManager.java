@@ -17,31 +17,30 @@ import edu.utdallas.whoosh.api.NodeType;
 public class NodeManager {
 
     private static NodeManager instance = null;
-    private static HashMap<String, ArrayList<String>> nodeGroups = new HashMap<String, ArrayList<String>>();
-    private static HashMap<String, ArrayList<String>> nodeSubgroups = new HashMap<String, ArrayList<String>>();
-    private static HashMap<NodeType, ArrayList<String>> nodeTypes = new HashMap<NodeType, ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> nodesByGroup = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> nodesBySubgroup = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, NodeGroup> nodeGroups = new HashMap<String, NodeGroup>();
+    private HashMap<NodeType, ArrayList<String>> nodeTypes = new HashMap<NodeType, ArrayList<String>>();
     private static HashMap<String, Node> nodes = new HashMap<String, Node>();
 
-    /**
-     * Puts a single node into the node manager.
-     * @param n - Node
-     */
+    /**Puts a single node into the node manager.
+     * @param n - Node*/
     public void putNode(Node n){
         nodes.put(n.getId(), n);
 
-        if(!nodeGroups.containsKey(n.getGroup().getName())){
-            nodeGroups.put(n.getGroup().getName(), new ArrayList<String>());
+        if(!nodesByGroup.containsKey(n.getGroup().getName())){
+            nodesByGroup.put(n.getGroup().getName(), new ArrayList<String>());
         }
-        if(!nodeSubgroups.containsKey(n.getSubgroup())){
-            nodeSubgroups.put(n.getSubgroup(), new ArrayList<String>());
+        if(!nodesBySubgroup.containsKey(n.getSubgroup())){
+            nodesBySubgroup.put(n.getSubgroup(), new ArrayList<String>());
         }
         if(!nodeTypes.containsKey(n.getType())){
             nodeTypes.put(n.getType(), new ArrayList<String>());
         }
 
         nodeTypes.get(n.getType()).add(n.getId());
-        nodeGroups.get(n.getGroup().getName()).add(n.getId());
-        nodeSubgroups.get(n.getSubgroup()).add(n.getId());
+        nodesByGroup.get(n.getGroup().getName()).add(n.getId());
+        nodesBySubgroup.get(n.getSubgroup()).add(n.getId());
     }
 
     /**
@@ -54,8 +53,7 @@ public class NodeManager {
         }
     }
 
-    /**
-     * Get a node by its id
+    /**Get a node by its id
      * @param id - id of node to retrieve
      * @return Node
      */
@@ -69,27 +67,35 @@ public class NodeManager {
      * @return list of nodes
      */
     public List<Node> getNodesFromGroup(NodeGroup group){
-        return getNodes(nodeGroups.get(group.getName()));
+        return getNodes(nodesByGroup.get(group.getName()));
     }
 
-    /**
-     * Get a list of nodes in a particular subgroup
+    /**Get a list of nodes in a particular subgroup
      * @param subgroup - Name of subgroup to retrieve nodes from
-     * @return list of nodes
-     */
+     * @return list of nodes*/
     public List<Node> getNodesFromSubgroup(String subgroup){
-        return getNodes(nodeSubgroups.get(subgroup));
+        return getNodes(nodesBySubgroup.get(subgroup));
     }
 
-    /**
-     * Get all nodes of a particular type
+    /**Get all nodes of a particular type
      * @param type - value of type of node to retrieve
-     * @return list of nodes
-     */
+     * @return list of nodes*/
     public List<Node> getNodesFromType(NodeType type){
         return getNodes(nodeTypes.get(type));
     }
-    
+
+    public void addNodeGroup(NodeGroup n){
+        nodeGroups.put(n.getId(), n);
+    }
+
+    public NodeGroup getNodeGroup(String id){
+        return nodeGroups.get(id);
+    }
+
+    public List<NodeGroup> getNodeGroups(){
+        return new ArrayList<NodeGroup>(nodeGroups.values());
+    }
+
     private List<Node> getNodes(ArrayList<String> nodeList){
         ArrayList<Node> temp = new ArrayList<Node>();
 
@@ -104,7 +110,6 @@ public class NodeManager {
         if(instance==null){
             instance = new NodeManager();
         }
-
         return instance;
     }
 }
