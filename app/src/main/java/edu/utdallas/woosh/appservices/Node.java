@@ -58,7 +58,7 @@ public class Node implements INode {
      */
     Node(ParseObject object){
 //^NodeGroups HAS to be initialized first by DBManager
-        this(   object.getString("id"),
+        this(   object.getString("myID"),
                 new LatLng(object.getParseGeoPoint("coordinates").getLatitude(), object.getParseGeoPoint("coordinates").getLongitude()),
                 NodeManager.getInstance().getNodeGroup(object.getString("nodegroup")),
                 object.getString("subgroup"),
