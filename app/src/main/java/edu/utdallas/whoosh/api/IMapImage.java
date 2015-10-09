@@ -20,5 +20,4 @@ public interface IMapImage {
      * the latitude/longitude bounds covered by this map
      */
     LatLngBounds getBounds();
-
 }

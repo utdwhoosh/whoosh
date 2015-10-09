@@ -1,6 +1,7 @@
 package edu.utdallas.woosh.appservices;
 
 import android.content.Context;
+import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -19,15 +20,10 @@ import edu.utdallas.whoosh.api.NodeType;
  */
 public class LocationService implements ILocationService
 {
-    private HashMap<String, IMapImage> mapImages;
+    private HashMap<String, IMapImage> mapImages = new HashMap<String, IMapImage>();
     private IMapImage campusMap;
-
-    public LocationService(Context context){
-
-        mapImages = new HashMap<String, IMapImage>();
-        //TODO: load mapImage Parse objects from databaseManager, store in hashmap using getImageKey() result
-        //TODO: build mapImages from application resources using context
-    }
+    private Context context;
+    private static LocationService instance = null;
 
     @Override
     public INode getClosestNode(LatLng coordinates) {
@@ -67,6 +63,23 @@ public class LocationService implements ILocationService
     @Override
     public IMapImage getGroupMap(INodeGroup group, Integer floor) {
         return mapImages.get(getImageKey(group.getName(), floor));
+    }
+
+    public static LocationService getInstance(){
+        if(instance == null){
+            instance = new LocationService();
+        }
+        return instance;
+    }
+
+    public void init(Context c){
+        this.context = c;
+    }
+
+    public void putMapImage(MapImage image){
+
+        image.init(context);
+        mapImages.put(getImageKey(image.getGroupName(), image.getFloor()), image);
     }
 
     private String getImageKey(String groupName, int floor){

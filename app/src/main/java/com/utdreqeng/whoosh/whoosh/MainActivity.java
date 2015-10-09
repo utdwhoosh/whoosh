@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
+import edu.utdallas.woosh.appservices.InitService;
 import edu.utdallas.woosh.appservices.Node;
 
 public class MainActivity extends AppCompatActivity  {
@@ -23,6 +24,9 @@ public class MainActivity extends AppCompatActivity  {
         // Enable Local Datastore
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_KEY);
+
+        //Initialize the backend services
+        InitService.init(this.getApplicationContext());
 
         // Register your parse models
         //ParseObject.registerSubclass(Node.class);
