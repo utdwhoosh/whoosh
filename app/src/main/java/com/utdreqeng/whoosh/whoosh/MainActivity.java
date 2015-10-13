@@ -6,10 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.parse.Parse;
-import com.parse.ParseObject;
 
-import edu.utdallas.woosh.appservices.InitService;
-import edu.utdallas.woosh.appservices.Node;
+import edu.utdallas.whoosh.appservices.InitService;
 
 public class MainActivity extends AppCompatActivity  {
 

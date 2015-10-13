@@ -1,9 +1,7 @@
-package edu.utdallas.woosh.appservices;
+package edu.utdallas.whoosh.appservices;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseObject;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;

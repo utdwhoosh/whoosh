@@ -1,15 +1,12 @@
-package edu.utdallas.woosh.appservices;
+package edu.utdallas.whoosh.appservices;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-import edu.utdallas.whoosh.api.NodeType;
 
 /**
  * Created by Marie on 10/3/2015.

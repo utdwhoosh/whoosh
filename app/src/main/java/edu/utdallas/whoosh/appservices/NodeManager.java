@@ -1,11 +1,9 @@
-package edu.utdallas.woosh.appservices;
+package edu.utdallas.whoosh.appservices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import edu.utdallas.whoosh.api.INode;
-import edu.utdallas.whoosh.api.INodeGroup;
 import edu.utdallas.whoosh.api.NodeType;
 
 /**

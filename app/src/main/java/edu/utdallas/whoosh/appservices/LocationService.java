@@ -1,0 +1,210 @@
+package edu.utdallas.whoosh.appservices;
+
+import android.content.Context;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import edu.utdallas.whoosh.api.GroupType;
+import edu.utdallas.whoosh.api.ILocationService;
+import edu.utdallas.whoosh.api.IMapImage;
+import edu.utdallas.whoosh.api.NodeType;
+
+/**
+ * Created by Dustin on 10/7/2015.
+ */
+public class LocationService implements ILocationService {
+    private HashMap<String, IMapImage> mapImages = new HashMap<String, IMapImage>();
+    private IMapImage campusMap;
+    private Context context;
+    private static LocationService instance = null;
+
+    @Override
+    public Node getClosestNode(LatLng coordinates) {
+        NodeManager manager = NodeManager.getInstance();
+
+        List<Node> possibleNodes = manager.getNodesFromGroup(getClosestGroup(coordinates));
+        Node currentNode,shortestNode;
+        shortestNode = null;
+        double currDistance,shortestDistance,latDif,lngDif;
+
+        shortestDistance = -1.0;
+
+        Iterator<Node> iterator = possibleNodes.listIterator();
+        while(iterator.hasNext())
+        {
+            currentNode = iterator.next();
+            latDif = coordinates.latitude - currentNode.getCoordinates().latitude;
+            lngDif = coordinates.longitude - currentNode.getCoordinates().longitude;
+
+            currDistance = Math.sqrt((latDif*latDif) + (lngDif*lngDif));
+            if(shortestDistance == -1.0)
+            {
+                shortestDistance = currDistance;
+                shortestNode = currentNode;
+            }
+            else if(shortestDistance > currDistance)
+            {
+                shortestDistance = currDistance;
+                shortestNode = currentNode;
+            }
+        }
+
+        return shortestNode;
+    }
+
+    @Override
+    public List<Node> searchNodesByTypes(String query, List<NodeType> types) {
+        NodeManager manager = NodeManager.getInstance();
+        List<Node> nodesByTypes = new ArrayList<>();
+
+        Iterator<NodeType> typeIterator = types.listIterator();
+        while(typeIterator.hasNext())
+        {
+            nodesByTypes.addAll(manager.getNodesFromType(typeIterator.next()));
+        }
+
+        return nodesByTypes;
+    }
+
+    @Override
+    public List<Node> searchNodesByTypesAndGroup(String query, List<NodeType> types, NodeGroup group) {
+        NodeManager manager = NodeManager.getInstance();
+
+        List<Node> result = new ArrayList<>();
+        Node currNode;
+
+        List<Node> nodesByGroup = manager.getNodesFromGroup(group);
+        Iterator<Node> groupIterator = nodesByGroup.listIterator();
+        Iterator<NodeType> typeIterator;
+
+        while(groupIterator.hasNext())
+        {
+            currNode = groupIterator.next();
+            typeIterator = types.listIterator();
+            while(typeIterator.hasNext())
+            {
+                if(currNode.getType() == typeIterator.next())
+                {
+                    result.add(currNode);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<Node> getNodesByTypesAndGroupAndFloor(List<NodeType> types, NodeGroup group, Integer floor) {
+        Node currNode;
+        List<Node> result = new ArrayList<>();
+        Iterator<NodeType> typeIterator;
+        NodeManager manager = NodeManager.getInstance();
+
+        List<Node> nodesByGroup = manager.getNodesFromGroup(group);
+        Iterator<Node> groupIterator = nodesByGroup.listIterator();
+
+        while(groupIterator.hasNext())
+        {
+            currNode = groupIterator.next();
+            typeIterator = types.listIterator();
+            while(typeIterator.hasNext())
+            {
+                if(currNode.getType() == typeIterator.next())
+                {
+                    if(currNode.getFloor().equals(floor))
+                    {
+                        result.add(currNode);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public NodeGroup getClosestGroup(LatLng coordinates) {
+        NodeGroup currGroup,closestGroup;
+        closestGroup = null;
+
+        double currDistance,shortestDistance,latDif,lngDif;
+        shortestDistance = -1.0;
+
+        NodeManager manager = NodeManager.getInstance();
+
+        List<NodeGroup> groups = manager.getNodeGroups();
+        Iterator<NodeGroup> iterator = groups.listIterator();
+
+        while(iterator.hasNext())
+        {
+            currGroup = iterator.next();
+            latDif = coordinates.latitude - currGroup.getCenterCoordinates().latitude;
+            lngDif = coordinates.longitude - currGroup.getCenterCoordinates().longitude;
+
+            currDistance = Math.sqrt((latDif*latDif) + (lngDif*lngDif));
+            if(shortestDistance == -1.0
+                    || shortestDistance > currDistance)
+            {
+                shortestDistance = currDistance;
+                closestGroup = currGroup;
+            }
+        }
+
+        return closestGroup;
+    }
+
+    @Override
+    public List<NodeGroup> getGroupsByType(GroupType type) {
+        NodeManager manager = NodeManager.getInstance();
+        List<NodeGroup> groups = manager.getNodeGroups();
+        List<NodeGroup> groupsByType = new ArrayList<>();
+        NodeGroup currGroup;
+        Iterator<NodeGroup> iterator = groups.listIterator();
+        while(iterator.hasNext())
+        {
+            currGroup = iterator.next();
+            if(currGroup.getType() == type)
+            {
+                groupsByType.add(currGroup);
+            }
+        }
+
+        return groupsByType;
+    }
+
+    @Override
+    public IMapImage getCampusMap() {
+        return campusMap;
+    }
+
+    @Override
+    public IMapImage getGroupMap(NodeGroup group, Integer floor) {
+        return mapImages.get(getImageKey(group.getName(), floor));
+    }
+
+    public static LocationService getInstance() {
+        if (instance == null) {
+            instance = new LocationService();
+        }
+        return instance;
+    }
+
+    public void init(Context c) {
+        this.context = c;
+    }
+
+    public void putMapImage(MapImage image) {
+
+        image.init(context);
+        mapImages.put(getImageKey(image.getGroupName(), image.getFloor()), image);
+    }
+
+    private String getImageKey(String groupName, int floor) {
+        return groupName + floor;
+    }
+}

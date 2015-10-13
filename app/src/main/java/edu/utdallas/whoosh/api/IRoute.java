@@ -1,6 +1,7 @@
 package edu.utdallas.whoosh.api;
 
 import java.util.List;
+import edu.utdallas.whoosh.appservices.*;
 
 /**
  * Data interface that represents a path between two {@link Node}s as a collection of intermediate

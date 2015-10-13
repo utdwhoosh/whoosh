@@ -3,6 +3,8 @@ package edu.utdallas.whoosh.api;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 
+import edu.utdallas.whoosh.appservices.*;
+
 import java.util.List;
 
 /**
@@ -47,7 +49,7 @@ public interface ILocationService {
      * within a certain building floor, an example call could be
      * {@code getNodesByTypesAndGroupAndFloor({@link NodeType#getHandicapRelevantTypes()}, group)}.
      */
-    List<INode> getNodesByTypesAndGroupAndFloor(List<NodeType> types, INodeGroup group, Integer floor);
+    List<Node> getNodesByTypesAndGroupAndFloor(List<NodeType> types, NodeGroup group, Integer floor);
 
     /**
      * given a set of coordinates, returns the closest {@link INodeGroup} by distance
