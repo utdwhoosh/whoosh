@@ -29,8 +29,8 @@ public class NodeManager {
         if(!nodesByGroup.containsKey(n.getGroup().getName())){
             nodesByGroup.put(n.getGroup().getName(), new ArrayList<String>());
         }
-        if(!nodesBySubgroup.containsKey(n.getSubgroup())){
-            nodesBySubgroup.put(n.getSubgroup(), new ArrayList<String>());
+        if(!nodesBySubgroup.containsKey(n.getSubgroup().toLowerCase())){
+            nodesBySubgroup.put(n.getSubgroup().toLowerCase(), new ArrayList<String>());
         }
         if(!nodeTypes.containsKey(n.getType())){
             nodeTypes.put(n.getType(), new ArrayList<String>());
@@ -38,7 +38,7 @@ public class NodeManager {
 
         nodeTypes.get(n.getType()).add(n.getId());
         nodesByGroup.get(n.getGroup().getName()).add(n.getId());
-        nodesBySubgroup.get(n.getSubgroup()).add(n.getId());
+        nodesBySubgroup.get(n.getSubgroup().toLowerCase()).add(n.getId());
     }
 
     /**

@@ -112,4 +112,8 @@ public class Node implements INode {
         return floor;
     }
 
+    @Override
+    public int hashCode(){
+        return Integer.parseInt(id);
+    }
 }

@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.parse.ParseObject;
+import com.utdreqeng.whoosh.whoosh.R;
 
 import edu.utdallas.whoosh.api.IMapImage;
 

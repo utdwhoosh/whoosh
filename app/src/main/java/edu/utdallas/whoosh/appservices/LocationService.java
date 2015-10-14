@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,6 +17,7 @@ import edu.utdallas.whoosh.api.NodeType;
 
 /**
  * Created by Dustin on 10/7/2015.
+ * Updated by Taber Hurst.
  */
 public class LocationService implements ILocationService {
     private HashMap<String, IMapImage> mapImages = new HashMap<String, IMapImage>();
@@ -60,27 +62,30 @@ public class LocationService implements ILocationService {
     @Override
     public List<Node> searchNodesByTypes(String query, List<NodeType> types) {
         NodeManager manager = NodeManager.getInstance();
-        List<Node> nodesByTypes = new ArrayList<>();
+        HashSet<Node> tempSet = new HashSet<Node>();
 
         Iterator<NodeType> typeIterator = types.listIterator();
         while(typeIterator.hasNext())
         {
-            nodesByTypes.addAll(manager.getNodesFromType(typeIterator.next()));
+            tempSet.addAll(manager.getNodesFromType(typeIterator.next()));
         }
 
-        return nodesByTypes;
+        //TODO: possibly add from Parse query rather than by subgroup
+        tempSet.addAll(manager.getNodesFromSubgroup(query));
+
+        return new ArrayList<Node>(tempSet);
     }
 
     @Override
     public List<Node> searchNodesByTypesAndGroup(String query, List<NodeType> types, NodeGroup group) {
         NodeManager manager = NodeManager.getInstance();
-
-        List<Node> result = new ArrayList<>();
         Node currNode;
 
         List<Node> nodesByGroup = manager.getNodesFromGroup(group);
         Iterator<Node> groupIterator = nodesByGroup.listIterator();
         Iterator<NodeType> typeIterator;
+
+        HashSet<Node> tempSet = new HashSet<Node>();
 
         while(groupIterator.hasNext())
         {
@@ -90,12 +95,15 @@ public class LocationService implements ILocationService {
             {
                 if(currNode.getType() == typeIterator.next())
                 {
-                    result.add(currNode);
+                    tempSet.add(currNode);
                 }
             }
         }
 
-        return result;
+        //TODO: possibly add from Parse query rather than by subgroup
+        tempSet.addAll(manager.getNodesFromSubgroup(query));
+
+        return new ArrayList<Node>(tempSet);
     }
 
     @Override
