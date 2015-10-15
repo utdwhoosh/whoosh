@@ -20,15 +20,14 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         // Enable Local Datastore
-        Parse.enableLocalDatastore(this);
+        /*Parse.enableLocalDatastore(this);
         Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_KEY);
 
         //Initialize the backend services
-        InitService.init(this.getApplicationContext());
+        InitService.init(this.getApplicationContext());*/
 
         // Register your parse models
         //ParseObject.registerSubclass(Node.class);
-
 
         setContentView(R.layout.activity_main);
     }
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity  {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        findViewById(R.id.action_directory);
         return true;
     }
 
