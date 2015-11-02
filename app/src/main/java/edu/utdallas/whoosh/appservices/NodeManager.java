@@ -1,6 +1,7 @@
 package edu.utdallas.whoosh.appservices;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,6 +58,10 @@ public class NodeManager {
      */
     public Node getNode(String id) {
         return nodes.get(id);
+    }
+
+    public Collection<Node> getNodes(){
+        return nodes.values();
     }
 
     /**

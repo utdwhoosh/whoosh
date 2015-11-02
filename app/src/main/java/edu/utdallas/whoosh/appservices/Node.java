@@ -58,7 +58,7 @@ public class Node implements INode {
      */
     Node(ParseObject object){
 //^NodeGroups HAS to be initialized first by DBManager
-        this(   object.getString("id"),
+        this(object.getString("id"),
                 new LatLng(object.getParseGeoPoint("coordinates").getLatitude(), object.getParseGeoPoint("coordinates").getLongitude()),
                 NodeManager.getInstance().getNodeGroup(object.getString("nodegroup")),
                 object.getString("subgroup"),
@@ -115,5 +115,15 @@ public class Node implements INode {
     @Override
     public int hashCode(){
         return Integer.parseInt(id);
+    }
+
+    public static float distanceInFeet(Node n1, Node n2){
+        //TODO: implement. Must convert lat long to feet first before distance formula.
+        return 0f;
+    }
+
+    public static float distance(Node n1, Node n2){
+        return (float)Math.sqrt(Math.pow(n2.getCoordinates().latitude - n1.getCoordinates().latitude, 2) +
+                Math.pow(n2.getCoordinates().longitude - n1.getCoordinates().longitude, 2));
     }
 }
