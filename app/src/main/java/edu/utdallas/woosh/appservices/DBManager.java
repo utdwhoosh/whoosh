@@ -22,7 +22,7 @@ public class DBManager {
 
     private static DBManager instance = null;
 
-
+    /**init(): initializes the data variables for the application*/
     public void init(){
         System.out.println("DBManager.init() : Initializing Nodes and NodeGroups..");
         initNodeGroups();
@@ -31,8 +31,7 @@ public class DBManager {
         System.out.println("DBManager.init() : Finished");
     }
 
-
-    /**retrieves all NodeGroup ParseObjects from Parse
+    /**initNodeGroups(): retrieves all NodeGroup ParseObjects from Parse
      *  & adds them to NodeManager's list of NodeGroups
      */
     private void initNodeGroups(){
@@ -51,11 +50,9 @@ public class DBManager {
         });
     }
 
-    /**retrieves all Node ParseObjects from Parse
+    /**initNodes(): retrieves all Node ParseObjects from Parse
      * creates a list of nodes with them, and adds the list to ModeManager
      */
-    //TODO: Add nodeGroup instantiator
-
     private void initNodes(){
         Log.d("DBManager", "Trying to init nodes...");
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
@@ -85,6 +82,9 @@ public class DBManager {
             }
         });
     }
+
+    /**
+     * getInstance() : returns an instance of DBManger*/
     public static DBManager getInstance(){
 
         if(instance==null){
