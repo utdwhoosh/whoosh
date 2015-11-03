@@ -1,4 +1,4 @@
-package edu.utdallas.woosh.appservices;
+package edu.utdallas.whoosh.appservices;
 
 import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.StepDirection;
