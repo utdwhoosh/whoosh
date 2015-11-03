@@ -1,5 +1,7 @@
 package edu.utdallas.woosh.appservices;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -22,8 +24,11 @@ public class DBManager {
 
 
     public void init(){
+        System.out.println("DBManager.init() : Initializing Nodes and NodeGroups..");
         initNodeGroups();
         initNodes();
+
+        System.out.println("DBManager.init() : Finished");
     }
 
 
@@ -49,7 +54,10 @@ public class DBManager {
     /**retrieves all Node ParseObjects from Parse
      * creates a list of nodes with them, and adds the list to ModeManager
      */
+    //TODO: Add nodeGroup instantiator
+
     private void initNodes(){
+        Log.d("DBManager", "Trying to init nodes...");
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> parseNodes, ParseException e) {
@@ -59,6 +67,8 @@ public class DBManager {
                     for(ParseObject object: parseNodes){
                         Node node = new Node(object);
                         nodes.add(node);
+
+                        Log.d("DBManager", "added " + node.getName() + " to node list.");
                     }
                     //set each node's adjacent nodes
                     int i = 0;
@@ -66,9 +76,11 @@ public class DBManager {
                         nodes.get(i).setAdjacentNodes(object);
                         i++;
                     }
+
                     NodeManager.getInstance().putNodes(nodes);
                 } else {
                     //something went wrong
+                    System.out.println("DBManager.initNodes() : Parsenodes could not be found()");
                 }
             }
         });
