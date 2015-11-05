@@ -19,6 +19,7 @@ import edu.utdallas.whoosh.api.RouteType;
 public class RoutingService implements IRoutingService
 {
     private NodeManager nodeManager = NodeManager.getInstance();
+    private final float AVERAGE_HEIGHT = 10f;
 
     public RoutingService(){}
 
@@ -57,7 +58,7 @@ public class RoutingService implements IRoutingService
                 if(closedSet.containsKey(n.getId())){
                     continue;
                 }
-                tempRating = current.g + Node.distance(current.node, n);
+                tempRating = current.g + Node.distanceInFeet(current.node, n) + Math.abs(current.node.getFloor() - n.getFloor())*AVERAGE_HEIGHT;
                 temp = nodeMap.get(n.getId());
 
                 if(!openSet.contains(temp)){
@@ -78,8 +79,14 @@ public class RoutingService implements IRoutingService
 
     //Heuristic using the Manhattan Distance
     private float getH(NodeHolder n1, NodeHolder n2){
-        return (float)(Math.abs(n2.node.getCoordinates().latitude - n1.node.getCoordinates().latitude) +
-                Math.abs(n2.node.getCoordinates().longitude - n1.node.getCoordinates().longitude));
+
+        float difLat = (float)(Math.abs(n2.node.getCoordinates().latitude - n1.node.getCoordinates().latitude));
+        float difLong = (float)(Math.abs(n2.node.getCoordinates().longitude - n1.node.getCoordinates().longitude));
+
+        return Node.distanceInFeet(n1.node.getCoordinates().latitude, n1.node.getCoordinates().longitude,
+                n1.node.getCoordinates().latitude, n1.node.getCoordinates().longitude+difLong) +
+                Node.distanceInFeet(n1.node.getCoordinates().latitude, n1.node.getCoordinates().longitude,
+                        n1.node.getCoordinates().latitude+difLat, n1.node.getCoordinates().longitude);
     }
 
     private Route buildRoute(NodeHolder start, HashMap<String, NodeHolder> pathMap, RouteType type){

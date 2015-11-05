@@ -118,12 +118,24 @@ public class Node implements INode {
     }
 
     public static float distanceInFeet(Node n1, Node n2){
-        //TODO: implement. Must convert lat long to feet first before distance formula.
-        return 0f;
+
+        return distanceInFeet(n1.getCoordinates().latitude, n1.getCoordinates().longitude,
+                n2.getCoordinates().latitude, n2.getCoordinates().longitude);
     }
 
-    public static float distance(Node n1, Node n2){
-        return (float)Math.sqrt(Math.pow(n2.getCoordinates().latitude - n1.getCoordinates().latitude, 2) +
-                Math.pow(n2.getCoordinates().longitude - n1.getCoordinates().longitude, 2));
+    public static float distanceInFeet(double lat1, double long1, double lat2, double long2){
+
+        double radius = 6372.8f;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(long2 - long1);
+        double latr1 = Math.toRadians(lat1);
+        double latr2 = Math.toRadians(lat2);
+
+        //Haversine formula
+        float result = (float)(radius * (2 * Math.asin(Math.sqrt(Math.pow(Math.sin(dLat / 2),2) +
+                Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2)))));
+
+        //kilometers to feet
+        return (result * 1000) * .3048f;
     }
 }
