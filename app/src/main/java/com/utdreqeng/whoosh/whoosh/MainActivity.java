@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import com.parse.Parse;
 
 import edu.utdallas.whoosh.appservices.InitService;
+import edu.utdallas.whoosh.appservices.DBManager;
+import edu.utdallas.whoosh.appservices.Node;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity  {
 
         // Register your parse models
         //ParseObject.registerSubclass(Node.class);
-
+        DBManager.getInstance().init();
 
         setContentView(R.layout.activity_main);
     }

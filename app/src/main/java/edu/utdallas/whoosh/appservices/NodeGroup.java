@@ -33,7 +33,7 @@ public class NodeGroup implements INodeGroup {
     }
 
     NodeGroup(ParseObject object){
-        this.id = object.getString("id");
+        this.id = object.getString("myID");
         this.name = object.getString("name");
         this.type = GroupType.valueOf(object.getString("grouptype"));
         this.floors = new ArrayList<Integer>(); floors = object.getList("floors");

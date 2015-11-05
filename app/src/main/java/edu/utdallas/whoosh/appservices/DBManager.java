@@ -1,5 +1,11 @@
 package edu.utdallas.whoosh.appservices;
 
+<<<<<<< HEAD:app/src/main/java/edu/utdallas/whoosh/appservices/DBManager.java
+=======
+import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
+>>>>>>> master:app/src/main/java/edu/utdallas/woosh/appservices/DBManager.java
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -17,14 +23,16 @@ public class DBManager {
 
     private static DBManager instance = null;
 
-
+    /**init(): initializes the data variables for the application*/
     public void init(){
+        System.out.println("DBManager.init() : Initializing Nodes and NodeGroups..");
         initNodeGroups();
         initNodes();
+
+        System.out.println("DBManager.init() : Finished");
     }
 
-
-    /**retrieves all NodeGroup ParseObjects from Parse
+    /**initNodeGroups(): retrieves all NodeGroup ParseObjects from Parse
      *  & adds them to NodeManager's list of NodeGroups
      */
     private void initNodeGroups(){
@@ -43,10 +51,11 @@ public class DBManager {
         });
     }
 
-    /**retrieves all Node ParseObjects from Parse
+    /**initNodes(): retrieves all Node ParseObjects from Parse
      * creates a list of nodes with them, and adds the list to ModeManager
      */
     private void initNodes(){
+        Log.d("DBManager", "Trying to init nodes...");
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> parseNodes, ParseException e) {
@@ -56,6 +65,8 @@ public class DBManager {
                     for(ParseObject object: parseNodes){
                         Node node = new Node(object);
                         nodes.add(node);
+
+                        Log.d("DBManager", "added " + node.getName() + " to node list.");
                     }
                     //set each node's adjacent nodes
                     int i = 0;
@@ -63,13 +74,18 @@ public class DBManager {
                         nodes.get(i).setAdjacentNodes(object);
                         i++;
                     }
+
                     NodeManager.getInstance().putNodes(nodes);
                 } else {
                     //something went wrong
+                    System.out.println("DBManager.initNodes() : Parsenodes could not be found()");
                 }
             }
         });
     }
+
+    /**
+     * getInstance() : returns an instance of DBManger*/
     public static DBManager getInstance(){
 
         if(instance==null){

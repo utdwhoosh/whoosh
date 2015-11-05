@@ -1,5 +1,7 @@
 package edu.utdallas.whoosh.appservices;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,6 +30,7 @@ public class NodeManager {
         nodes.put(n.getId(), n);
 
         if(!nodesByGroup.containsKey(n.getGroup().getName())){
+            Log.d("NodeManager", "added " + n.getName() + " to node list.");
             nodesByGroup.put(n.getGroup().getName(), new ArrayList<String>());
         }
         if(!nodesBySubgroup.containsKey(n.getSubgroup().toLowerCase())){
