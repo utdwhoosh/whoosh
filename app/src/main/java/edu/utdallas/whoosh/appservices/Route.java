@@ -1,7 +1,9 @@
 package edu.utdallas.whoosh.appservices;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.IRoute;
 import edu.utdallas.whoosh.api.RouteType;
 
@@ -15,17 +17,17 @@ public class Route implements IRoute {
 
     public Route(List<Node> nodes, RouteType type)
     {
-        this.nodes = nodes;
+        this.nodes = new ArrayList<Node>(nodes);
         this.type = type;
     }
 
     @Override
-    public Node getOrigin() {
+    public INode getOrigin() {
         return nodes.get(0);
     }
 
     @Override
-    public Node getDestination() {
+    public INode getDestination() {
         return nodes.get(nodes.size()-1);
     }
 
@@ -35,8 +37,8 @@ public class Route implements IRoute {
     }
 
     @Override
-    public List<Node> getPath() {
-        return nodes;
+    public List<INode> getPath() {
+        return new ArrayList<INode>(nodes);
     }
 
     @Override

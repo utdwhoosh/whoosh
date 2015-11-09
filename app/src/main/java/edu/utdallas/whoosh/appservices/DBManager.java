@@ -1,11 +1,8 @@
 package edu.utdallas.whoosh.appservices;
 
-<<<<<<< HEAD:app/src/main/java/edu/utdallas/whoosh/appservices/DBManager.java
-=======
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
->>>>>>> master:app/src/main/java/edu/utdallas/woosh/appservices/DBManager.java
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
