@@ -58,18 +58,14 @@ public class Node implements INode {
      */
     Node(ParseObject object){
 //^NodeGroups HAS to be initialized first by DBManager
-<<<<<<< HEAD:app/src/main/java/edu/utdallas/whoosh/appservices/Node.java
-        this(object.getString("id"),
-=======
         this(   object.getString("myID"),
->>>>>>> master:app/src/main/java/edu/utdallas/woosh/appservices/Node.java
-                new LatLng(object.getParseGeoPoint("coordinates").getLatitude(), object.getParseGeoPoint("coordinates").getLongitude()),
-                NodeManager.getInstance().getNodeGroup(object.getString("nodegroup")),
-                object.getString("subgroup"),
-                object.getString("name"),
-                NodeType.valueOf(object.getString("type")),
-                object.getInt("floor"),
-                object.getList("adjacentNodes").size()
+        new LatLng(object.getParseGeoPoint("coordinates").getLatitude(), object.getParseGeoPoint("coordinates").getLongitude()),
+        NodeManager.getInstance().getNodeGroup(object.getString("nodegroup")),
+        object.getString("subgroup"),
+        object.getString("name"),
+        NodeType.valueOf(object.getString("type")),
+        object.getInt("floor"),
+        object.getList("adjacentNodes").size()
         );
     }
 
