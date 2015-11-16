@@ -1,12 +1,15 @@
 package com.utdreqeng.whoosh.whoosh;
 
 import android.app.ActionBar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.parse.Parse;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity  {
     public static final String PARSE_CLIENT_KEY = "kA1LGDmyML7rhXEDkQjgNIKw8cNM5VoDpsO7Drxl";
 
     private View lastTopBar = null;
+    private RouteMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +41,58 @@ public class MainActivity extends AppCompatActivity  {
         //ParseObject.registerSubclass(Node.class);
 
         setContentView(R.layout.activity_main);
+        map = new RouteMap(this);
+
+        ((FloatingActionButton)findViewById(R.id.navButtonTop)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    map.locateUser();
+                }
+                return false;
+            }
+        });
+
         setTopBar(0);
+        map.locateUser();
     }
 
     private void setTopBar(int id){
 
-        View temp;
+        View temp = null;
 
         if(lastTopBar != null){
+            lastTopBar.clearFocus();
             ((RelativeLayout)findViewById(R.id.mainLayout)).removeView(lastTopBar);
         }
 
         switch(id){
-            default: temp = getLayoutInflater().inflate(R.layout.searchbar_layout, null); break;
+            case 0:
+                    temp = getLayoutInflater().inflate(R.layout.searchbar_layout, null);
+
+                    ((Button)temp.findViewById(R.id.searchButton)).setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if (event.getAction() == MotionEvent.ACTION_UP) {
+                                setTopBar(1);
+                            }
+                            return false;
+                        }
+                    }); break;
+            case 1:
+                    temp = getLayoutInflater().inflate(R.layout.searchbar_layout2, null);
+                    temp.findViewById(R.id.searchBox).requestFocus();
+
+                    ((Button)temp.findViewById(R.id.searchExitButton)).setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if (event.getAction() == MotionEvent.ACTION_UP) {
+                                setTopBar(0);
+                            }
+                            return false;
+                        }
+                    }); break;
+            default: break;
         }
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
