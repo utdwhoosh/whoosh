@@ -29,14 +29,14 @@ public class RoutingService implements IRoutingService
      * @return Route between the nodes. If null, no path was found.
      */
     @Override
-    public IRoute getRoute(Node start, Node end, RouteType type) {
+    public IRoute getRoute(INode start, INode end, RouteType type) {
 
         PriorityQueue<NodeHolder> openSet = new PriorityQueue<NodeHolder>();
         HashMap<String, NodeHolder> closedSet = new HashMap<String, NodeHolder>();
         HashMap<String, NodeHolder> nodeMap = new HashMap<String, NodeHolder>();
         NodeHolder current, temp,
-                   origin = new NodeHolder(start),
-                   destination = new NodeHolder(end);
+                   origin = new NodeHolder((Node)start),
+                   destination = new NodeHolder((Node)end);
         float tempRating;
 
         for(Node n: nodeManager.getNodes()){

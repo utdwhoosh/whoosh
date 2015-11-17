@@ -13,6 +13,8 @@ import java.util.Iterator;
 import edu.utdallas.whoosh.api.GroupType;
 import edu.utdallas.whoosh.api.ILocationService;
 import edu.utdallas.whoosh.api.IMapImage;
+import edu.utdallas.whoosh.api.INode;
+import edu.utdallas.whoosh.api.INodeGroup;
 import edu.utdallas.whoosh.api.NodeType;
 
 /**
@@ -60,7 +62,7 @@ public class LocationService implements ILocationService {
     }
 
     @Override
-    public List<Node> searchNodesByTypes(String query, List<NodeType> types) {
+    public List<INode> searchNodesByTypes(String query, List<NodeType> types) {
         NodeManager manager = NodeManager.getInstance();
         HashSet<Node> tempSet = new HashSet<Node>();
 
@@ -73,15 +75,15 @@ public class LocationService implements ILocationService {
         //TODO: possibly add from Parse query rather than by subgroup
         tempSet.addAll(manager.getNodesFromSubgroup(query));
 
-        return new ArrayList<Node>(tempSet);
+        return new ArrayList<INode>(tempSet);
     }
 
     @Override
-    public List<Node> searchNodesByTypesAndGroup(String query, List<NodeType> types, NodeGroup group) {
+    public List<INode> searchNodesByTypesAndGroup(String query, List<NodeType> types, INodeGroup group) {
         NodeManager manager = NodeManager.getInstance();
         Node currNode;
 
-        List<Node> nodesByGroup = manager.getNodesFromGroup(group);
+        List<Node> nodesByGroup = manager.getNodesFromGroup((NodeGroup)group);
         Iterator<Node> groupIterator = nodesByGroup.listIterator();
         Iterator<NodeType> typeIterator;
 
@@ -103,7 +105,7 @@ public class LocationService implements ILocationService {
         //TODO: possibly add from Parse query rather than by subgroup
         tempSet.addAll(manager.getNodesFromSubgroup(query));
 
-        return new ArrayList<Node>(tempSet);
+        return new ArrayList<INode>(tempSet);
     }
 
     @Override
@@ -167,10 +169,10 @@ public class LocationService implements ILocationService {
     }
 
     @Override
-    public List<NodeGroup> getGroupsByType(GroupType type) {
+    public List<INodeGroup> getGroupsByType(GroupType type) {
         NodeManager manager = NodeManager.getInstance();
         List<NodeGroup> groups = manager.getNodeGroups();
-        List<NodeGroup> groupsByType = new ArrayList<>();
+        List<INodeGroup> groupsByType = new ArrayList<>();
         NodeGroup currGroup;
         Iterator<NodeGroup> iterator = groups.listIterator();
         while(iterator.hasNext())
@@ -191,7 +193,7 @@ public class LocationService implements ILocationService {
     }
 
     @Override
-    public IMapImage getGroupMap(NodeGroup group, Integer floor) {
+    public IMapImage getGroupMap(INodeGroup group, Integer floor) {
         return mapImages.get(getImageKey(group.getName(), floor));
     }
 
