@@ -72,11 +72,11 @@ public class Node implements INode {
     /**Setter(s?)*/
     public void setAdjacentNodes(ParseObject object){
         //list of adjacent node IDS
-        List <String> neighbors = object.getList("adjacentNodes");
+        List <Integer> neighbors = object.getList("adjacentNodes");
 
         for(int i = 0; i < neighbors.size(); i++ ){
             //
-            adjacentNodes.add(NodeManager.getInstance().getNode(neighbors.get(i).toString()));
+            adjacentNodes.add(NodeManager.getInstance().getNode(""+neighbors.get(i)));
         }
     }
     /**Getters*/

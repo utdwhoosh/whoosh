@@ -33,8 +33,8 @@ public class NodeManager {
             Log.d("NodeManager", "added " + n.getName() + " to node list.");
             nodesByGroup.put(n.getGroup().getName(), new ArrayList<String>());
         }
-        if(!nodesBySubgroup.containsKey(n.getSubgroup().toLowerCase())){
-            nodesBySubgroup.put(n.getSubgroup().toLowerCase(), new ArrayList<String>());
+        if(!nodesBySubgroup.containsKey(n.getName().toLowerCase())){
+            nodesBySubgroup.put(n.getName().toLowerCase(), new ArrayList<String>());
         }
         if(!nodeTypes.containsKey(n.getType())){
             nodeTypes.put(n.getType(), new ArrayList<String>());
@@ -42,7 +42,7 @@ public class NodeManager {
 
         nodeTypes.get(n.getType()).add(n.getId());
         nodesByGroup.get(n.getGroup().getName()).add(n.getId());
-        nodesBySubgroup.get(n.getSubgroup().toLowerCase()).add(n.getId());
+        nodesBySubgroup.get(n.getName().toLowerCase()).add(n.getId());
     }
 
     /**
@@ -80,7 +80,7 @@ public class NodeManager {
      * @param subgroup - Name of subgroup to retrieve nodes from
      * @return list of nodes*/
     public List<Node> getNodesFromSubgroup(String subgroup){
-        return getNodes(nodesBySubgroup.get(subgroup));
+        return getNodes(nodesBySubgroup.get(subgroup.toLowerCase()));
     }
 
     /**Get all nodes of a particular type
@@ -91,7 +91,7 @@ public class NodeManager {
     }
 
     public void addNodeGroup(NodeGroup n){
-        nodeGroups.put(n.getId(), n);
+        nodeGroups.put(n.getName(), n);
     }
 
     public NodeGroup getNodeGroup(String id){
