@@ -16,10 +16,12 @@
     <EditText
         android:id="@+id/searchBox"
         android:layout_width="match_parent"
+        android:imeOptions="actionDone"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:hint="Search"
-        android:textColor="#cccccc"
+        android:singleLine="true"
+        android:textColor="#555555"
         android:textSize="18sp"
         android:paddingLeft="20dp"
         android:layout_weight=".9"/>

@@ -1,16 +1,24 @@
 package com.utdreqeng.whoosh.whoosh;
 
 import android.app.ActionBar;
+import android.content.Context;
+import android.opengl.Visibility;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.Parse;
 
@@ -23,7 +31,9 @@ public class MainActivity extends AppCompatActivity  {
     public static final String PARSE_CLIENT_KEY = "kA1LGDmyML7rhXEDkQjgNIKw8cNM5VoDpsO7Drxl";
 
     private View lastTopBar = null;
+    private int lastTopId = 0;
     private RouteMap map;
+    //private Route currentRoute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +58,16 @@ public class MainActivity extends AppCompatActivity  {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     map.locateUser();
+                }
+                return false;
+            }
+        });
+
+        ((FloatingActionButton)findViewById(R.id.navButtonBottom)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    setTopBar(2);
                 }
                 return false;
             }
@@ -83,6 +103,18 @@ public class MainActivity extends AppCompatActivity  {
                     temp = getLayoutInflater().inflate(R.layout.searchbar_layout2, null);
                     temp.findViewById(R.id.searchBox).requestFocus();
 
+                    ((EditText)temp.findViewById(R.id.searchBox)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                                setTopBar(2);
+                            }
+                            return false;
+                        }
+                    });
+                    openKeyboard();
+
                     ((Button)temp.findViewById(R.id.searchExitButton)).setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
@@ -92,7 +124,46 @@ public class MainActivity extends AppCompatActivity  {
                             return false;
                         }
                     }); break;
+
+            case 2:
+                    String startText = "My Location", endText = "";
+
+                    if(lastTopId == 1){
+                        endText = ((EditText)lastTopBar.findViewById(R.id.searchBox)).getText().toString();
+                    }
+
+                    temp = getLayoutInflater().inflate(R.layout.navigation_layout, null);
+                    ((EditText)temp.findViewById(R.id.nav_fieldStart)).setText(startText);
+                    ((EditText)temp.findViewById(R.id.nav_fieldEnd)).setText(endText);
+
+                    ((Button)temp.findViewById(R.id.nav_screen_backButton)).setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if (event.getAction() == MotionEvent.ACTION_UP) {
+                                setTopBar(0);
+                            }
+                            return false;
+                        }
+                    }); break;
+
             default: break;
+        }
+
+
+        if(id == 0 || id == 1){
+            ((FloatingActionButton)findViewById(R.id.navButtonBottom)).setVisibility(View.VISIBLE);
+            ((FloatingActionButton)findViewById(R.id.navButtonTop)).setVisibility(View.VISIBLE);
+        }
+        else{
+            ((FloatingActionButton)findViewById(R.id.navButtonBottom)).setVisibility(View.INVISIBLE);
+            ((FloatingActionButton)findViewById(R.id.navButtonTop)).setVisibility(View.INVISIBLE);
+        }
+
+        if(id == 2){
+            ((FloatingActionButton)findViewById(R.id.navButtonBottom2)).setVisibility(View.VISIBLE);
+        }
+        else{
+            ((FloatingActionButton)findViewById(R.id.navButtonBottom2)).setVisibility(View.INVISIBLE);
         }
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -101,7 +172,14 @@ public class MainActivity extends AppCompatActivity  {
 
         ((RelativeLayout)findViewById(R.id.mainLayout)).addView(temp, params);
         lastTopBar = temp;
+        lastTopId = id;
     }
+
+    private void openKeyboard(){
+        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
