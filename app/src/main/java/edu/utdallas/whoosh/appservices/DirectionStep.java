@@ -17,6 +17,7 @@ public class DirectionStep {
     StepDirection direction;
     int distance; //distance from start to end node in feet (round error?)
 
+
     DirectionStep(INode start, INode end, StepType type){
         this.start = start;
         this.end = end;
@@ -62,5 +63,11 @@ public class DirectionStep {
     void findDirection(){
         /*TODO: finish this*/
         direction = StepDirection.Straight; // default for now..
+    }
+
+    String getInstructions(){
+        String instructions = "";
+
+        return instructions; //TODO: create instruction string based on distance and direction
     }
 }
