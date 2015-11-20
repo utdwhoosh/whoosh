@@ -2,6 +2,7 @@ package edu.utdallas.whoosh.appservices;
 
 import java.util.List;
 
+import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.StepType;
 
 /**
@@ -21,7 +22,7 @@ public class Directions {
 
     /*builds a list of Direction steps based on the nodes in route*/
     public List<DirectionStep> getSteps(){
-        List<Node> nodes = route.getPath();
+        List<INode> nodes = route.getPath();
 
         //notice we skip the last node
         for(int i = 0; i < nodes.size()-1; i++){

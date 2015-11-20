@@ -58,7 +58,6 @@ public class Node implements INode {
      */
     Node(ParseObject object){
 //^NodeGroups HAS to be initialized first by DBManager
-<<<<<<< HEAD
         this(   object.getString("myID"),
         new LatLng(object.getParseGeoPoint("coordinates").getLatitude(), object.getParseGeoPoint("coordinates").getLongitude()),
         NodeManager.getInstance().getNodeGroup(object.getString("nodegroup")),
@@ -66,18 +65,7 @@ public class Node implements INode {
         object.getString("name"),
         NodeType.valueOf(object.getString("type")),
         object.getInt("floor"),
-        object.getList("adjacentNodes").size()
-=======
-        this(object.getString("id"),
-                new LatLng(object.getParseGeoPoint("coordinates").getLatitude(), object.getParseGeoPoint("coordinates").getLongitude()),
-                NodeManager.getInstance().getNodeGroup(object.getString("nodegroup")),
-                object.getString("subgroup"),
-                object.getString("name"),
-                NodeType.valueOf(object.getString("type")),
-                object.getInt("floor"),
-                object.getList("adjacentNodes").size()
->>>>>>> 851b072608a059d75bb57031d89968c933c6c0f5
-        );
+        object.getList("adjacentNodes").size());
     }
 
     /**Setter(s?)*/
