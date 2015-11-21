@@ -12,4 +12,8 @@ public class InitService {
         LocationService.getInstance().init(context);
         DBManager.getInstance().init();
     }
+
+    public static boolean isReady(){
+        return DBManager.getInstance().isReady;
+    }
 }

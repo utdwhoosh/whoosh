@@ -1,5 +1,7 @@
 package edu.utdallas.whoosh.appservices;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class Node implements INode {
     private String subgroup;
     private String name;
     private NodeType type;
-    private List<Node> adjacentNodes;
+    private ArrayList<Node> adjacentNodes;
     private Integer floor;
     private NodeGroup group;
 
@@ -32,18 +34,18 @@ public class Node implements INode {
      * @param subgroup
      * @param name
      * @param type
-     * @param adjacentNodesSize
+     * @param adjacentNodes
      * @param floor
      */
     Node( String id, LatLng coordinates, NodeGroup group, String subgroup,
-          String name, NodeType type, Integer floor, int adjacentNodesSize){
+          String name, NodeType type, Integer floor, List<Object> adjacentNodes){
         this.id = id;
         this.coordinates = coordinates;
         this.group = group;
         this.subgroup = subgroup;
         this.name = name;
         this.type = type;
-        this.adjacentNodes = new ArrayList<Node>(adjacentNodesSize); //initalized w/ setAdjacent Nodes after initial instantiation
+        this.adjacentNodes = new ArrayList<Node>(); //initalized w/ setAdjacent Nodes after initial instantiation
         this.floor = floor;
     }
 
@@ -58,24 +60,28 @@ public class Node implements INode {
      */
     Node(ParseObject object){
 //^NodeGroups HAS to be initialized first by DBManager
-        this(   object.getString("myID"),
-        new LatLng(object.getParseGeoPoint("coordinates").getLatitude(), object.getParseGeoPoint("coordinates").getLongitude()),
-        NodeManager.getInstance().getNodeGroup(object.getString("nodegroup")),
-        object.getString("subgroup"),
-        object.getString("name"),
-        NodeType.valueOf(object.getString("type")),
-        object.getInt("floor"),
-        object.getList("adjacentNodes").size());
+        this(object.getString("myID"),
+                new LatLng(object.getParseGeoPoint("coordinates").getLatitude(), object.getParseGeoPoint("coordinates").getLongitude()),
+                NodeManager.getInstance().getNodeGroup(object.getString("nodegroup")),
+                object.getString("subgroup"),
+                object.getString("name"),
+                NodeType.valueOf(object.getString("type")),
+                object.getInt("floor"),
+                object.getList("adjacentNodes"));
     }
 
     /**Setter(s?)*/
     public void setAdjacentNodes(ParseObject object){
         //list of adjacent node IDS
-        List <Integer> neighbors = object.getList("adjacentNodes");
+        List <Object> neighbors = object.getList("adjacentNodes");
+
+        Log.d("Node","neighbors: "+neighbors.size());
 
         for(int i = 0; i < neighbors.size(); i++ ){
             //
-            adjacentNodes.add(NodeManager.getInstance().getNode(""+neighbors.get(i)));
+            Log.d("Node","loading neighbor: "+NodeManager.getInstance().getNode("" + (Integer) neighbors.get(i)).getId());
+            adjacentNodes.add(NodeManager.getInstance().getNode("" + (Integer) neighbors.get(i)));
+            Log.d("Node", "added " + adjacentNodes.get(i).getId() + " as neighbor");
         }
     }
     /**Getters*/

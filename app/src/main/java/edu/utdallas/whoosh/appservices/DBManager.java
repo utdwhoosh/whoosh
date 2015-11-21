@@ -19,6 +19,7 @@ public class DBManager {
 
 
     private static DBManager instance = null;
+    public static boolean isReady = false;
 
     /**init(): initializes the data variables for the application*/
     public void init(){
@@ -54,27 +55,29 @@ public class DBManager {
      */
     private void initNodes(){
         Log.d("DBManager", "Trying to init nodes...");
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Node").setLimit(200);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> parseNodes, ParseException e) {
 
                 if (e == null) {
                     List<Node> nodes = new ArrayList<Node>();
                     //instantiate each node
+
                     for(ParseObject object: parseNodes){
                         Node node = new Node(object);
                         nodes.add(node);
 
-                        Log.d("DBManager", "added " + node.getName() + " to node list.");
+                        Log.d("DBManager", "added " + node.getId() + " to node list.");
                     }
+                    NodeManager.getInstance().putNodes(nodes);
+
                     //set each node's adjacent nodes
                     int i = 0;
                     for(ParseObject object: parseNodes){
                         nodes.get(i).setAdjacentNodes(object);
                         i++;
                     }
-
-                    NodeManager.getInstance().putNodes(nodes);
+                    isReady = true;
                 } else {
                     //something went wrong
                     System.out.println("DBManager.initNodes() : Parsenodes could not be found()");

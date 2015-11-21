@@ -1,6 +1,7 @@
 package edu.utdallas.whoosh.appservices;
 
 import android.location.Location;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class RoutingService implements IRoutingService
             nodeMap.put(n.getId(), new NodeHolder(n));
         }
         openSet.add(origin);
+        Log.d("RoutingService", "Getting route");
 
         while(openSet.size() != 0){
 
@@ -52,8 +54,11 @@ public class RoutingService implements IRoutingService
             if(current.equals(destination)){
                 return buildRoute(current, nodeMap, type);
             }
+            Log.d("RoutingService","Building route");
 
             for(Node n: current.node.getAdjacentNodes()){
+
+                Log.d("RoutingService","Checking node "+n.getId()+" in route");
 
                 if(closedSet.containsKey(n.getId())){
                     continue;
