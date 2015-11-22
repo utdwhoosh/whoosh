@@ -58,7 +58,7 @@ public class RoutingService implements IRoutingService
 
             for(Node n: current.node.getAdjacentNodes()){
 
-                Log.d("RoutingService","Checking node "+n.getId()+" in route");
+                Log.d("RoutingService","Current: "+current.node.getId()+" Checking node "+n.getId()+" in route");
 
                 if(closedSet.containsKey(n.getId())){
                     continue;
@@ -85,24 +85,29 @@ public class RoutingService implements IRoutingService
     //Heuristic using the Manhattan Distance
     private float getH(NodeHolder n1, NodeHolder n2){
 
-        float difLat = (float)(Math.abs(n2.node.getCoordinates().latitude - n1.node.getCoordinates().latitude));
+        /*float difLat = (float)(Math.abs(n2.node.getCoordinates().latitude - n1.node.getCoordinates().latitude));
         float difLong = (float)(Math.abs(n2.node.getCoordinates().longitude - n1.node.getCoordinates().longitude));
 
         return Node.distanceInFeet(n1.node.getCoordinates().latitude, n1.node.getCoordinates().longitude,
                 n1.node.getCoordinates().latitude, n1.node.getCoordinates().longitude+difLong) +
                 Node.distanceInFeet(n1.node.getCoordinates().latitude, n1.node.getCoordinates().longitude,
-                        n1.node.getCoordinates().latitude+difLat, n1.node.getCoordinates().longitude);
+                        n1.node.getCoordinates().latitude+difLat, n1.node.getCoordinates().longitude);*/
+        return 0;
     }
 
     private Route buildRoute(NodeHolder start, HashMap<String, NodeHolder> pathMap, RouteType type){
 
         ArrayList<Node> path = new ArrayList<Node>();
         NodeHolder current = start;
-        path.add(start.node);
 
-        while(current.parent != null){
+        while(true){
+            path.add(0, current.node);
+
+            if(current.parent == null){
+                break;
+            }
+
             current = pathMap.get(current.parent);
-            path.add(path.size()-1, current.node);
         }
         return new Route(path, type);
     }

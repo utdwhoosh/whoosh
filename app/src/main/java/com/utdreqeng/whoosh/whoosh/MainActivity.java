@@ -50,15 +50,15 @@ public class MainActivity extends AppCompatActivity  {
                     }
                 }
 
-                Node start = NodeManager.getInstance().getNode("1");
-                Node end = NodeManager.getInstance().getNode("20");
+                Node start = NodeManager.getInstance().getNode("113");
+                Node end = NodeManager.getInstance().getNode("91");
                 RoutingService rs = new RoutingService();
 
                 Log.d(getClass().getName(), "trying to build path");
 
                 String temp = "";
                 for(INode n: rs.getRoute(start, end, RouteType.Walking).getPath()){
-                    temp+=","+n.getId();
+                    temp+=n.getId()+",";
                 }
                 Log.d(getClass().getName(),"Path="+temp);
             }
