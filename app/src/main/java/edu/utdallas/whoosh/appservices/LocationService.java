@@ -69,11 +69,9 @@ public class LocationService implements ILocationService {
         Iterator<NodeType> typeIterator = types.listIterator();
         while(typeIterator.hasNext())
         {
-            tempSet.addAll(manager.getNodesFromType(typeIterator.next()));
+            //tempSet.addAll(manager.getNodesFromType(typeIterator.next()));
         }
-
-        //TODO: possibly add from Parse query rather than by subgroup
-        tempSet.addAll(manager.getNodesFromSubgroup(query));
+        tempSet.addAll(manager.doNodeQuery(query));
 
         return new ArrayList<INode>(tempSet);
     }

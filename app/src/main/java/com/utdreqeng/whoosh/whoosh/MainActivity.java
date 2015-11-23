@@ -6,9 +6,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.Parse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.utdallas.whoosh.api.INode;
+import edu.utdallas.whoosh.api.NodeType;
 import edu.utdallas.whoosh.api.RouteType;
 import edu.utdallas.whoosh.appservices.InitService;
 import edu.utdallas.whoosh.appservices.DBManager;
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity  {
         // Register your parse models
         //ParseObject.registerSubclass(Node.class);
 
-        //for testing RoutingService
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -49,9 +54,22 @@ public class MainActivity extends AppCompatActivity  {
                         e.printStackTrace();
                     }
                 }
+                List<NodeType> types = new ArrayList<NodeType>();
 
-                Node start = NodeManager.getInstance().getNode("113");
-                Node end = NodeManager.getInstance().getNode("91");
+                for(NodeType t: NodeType.values()){
+                    if(t != NodeType.Stair){
+                        types.add(t);
+                    }
+                }
+
+                //for testing RoutingService & LocationService
+                Node start = LocationService.getInstance().getClosestNode(new LatLng(33.071865f, -96.750301f));
+                Node end = null;
+                List<INode> results = LocationService.getInstance().searchNodesByTypes("ATC 1.91", types);
+
+                if(results.size() != 0){
+                    end = (Node)results.get(0);
+                }
                 RoutingService rs = new RoutingService();
 
                 Log.d(getClass().getName(), "trying to build path");

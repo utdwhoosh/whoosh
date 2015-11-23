@@ -5,7 +5,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import edu.utdallas.whoosh.api.NodeType;
 
@@ -83,11 +85,38 @@ public class NodeManager {
         return getNodes(nodesBySubgroup.get(subgroup.toLowerCase()));
     }
 
+    public List<Node> doNodeQuery(String query){
+        try{
+            String[] tokens = query.split(" ");
+            HashSet<Node> nodeSet = new HashSet<Node>();
+
+            if(tokens.length == 2){
+
+                for(Node n: getNodesFromSubgroup(tokens[1].toLowerCase())){
+                    if(n.getGroup().getName() == tokens[0].toUpperCase()){
+                        nodeSet.add(n);
+                    }
+                }
+            }
+            else{
+                nodeSet.addAll(getNodesFromSubgroup(query));
+            }
+            return new ArrayList<Node>(nodeSet);
+        }
+        catch(Exception e){
+            Log.d("NodeManager","Invalid query string");
+        }
+        return new ArrayList<Node>();
+    }
+
     /**Get all nodes of a particular type
      * @param type - value of type of node to retrieve
      * @return list of nodes*/
     public List<Node> getNodesFromType(NodeType type){
-        return getNodes(nodeTypes.get(type));
+        if(nodeTypes.containsKey(type)){
+            return getNodes(nodeTypes.get(type));
+        }
+        else return new ArrayList<Node>();
     }
 
     public void addNodeGroup(NodeGroup n){
