@@ -1,7 +1,13 @@
 package edu.utdallas.whoosh.api;
 
+import edu.utdallas.whoosh.appservices.Node;
+
 /**
  * Service interface that provides functionality to calculate a {@link IRoute} between two {@link INode}s.
+<<<<<<< HEAD
+ *
+=======
+>>>>>>> master
  * Created by sasha on 9/21/15.
  */
 public interface IRoutingService {

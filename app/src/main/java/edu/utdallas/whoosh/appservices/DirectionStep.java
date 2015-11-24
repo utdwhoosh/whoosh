@@ -1,4 +1,4 @@
-package edu.utdallas.woosh.appservices;
+package edu.utdallas.whoosh.appservices;
 
 import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.StepDirection;
@@ -16,6 +16,7 @@ public class DirectionStep {
     StepType type;
     StepDirection direction;
     int distance; //distance from start to end node in feet (round error?)
+
 
     DirectionStep(INode start, INode end, StepType type){
         this.start = start;
@@ -62,5 +63,11 @@ public class DirectionStep {
     void findDirection(){
         /*TODO: finish this*/
         direction = StepDirection.Straight; // default for now..
+    }
+
+    String getInstructions(){
+        String instructions = "";
+
+        return instructions; //TODO: create instruction string based on distance and direction
     }
 }

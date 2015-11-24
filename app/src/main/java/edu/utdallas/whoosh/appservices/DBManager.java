@@ -1,17 +1,15 @@
-package edu.utdallas.woosh.appservices;
+package edu.utdallas.whoosh.appservices;
 
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-import edu.utdallas.whoosh.api.NodeType;
 
 /**
  * Created by Marie on 10/3/2015.
@@ -21,21 +19,22 @@ public class DBManager {
 
 
     private static DBManager instance = null;
+    public static boolean isReady = false;
 
     /**init(): initializes the data variables for the application*/
     public void init(){
-        System.out.println("DBManager.init() : Initializing Nodes and NodeGroups..");
+        Log.d(getClass().getName(), "DBManager.init() : Initializing Nodes and NodeGroups..");
         initNodeGroups();
-        initNodes();
+        //initNodes();
 
-        System.out.println("DBManager.init() : Finished");
+        Log.d(getClass().getName(), "DBManager.init() : Finished");
     }
 
     /**initNodeGroups(): retrieves all NodeGroup ParseObjects from Parse
      *  & adds them to NodeManager's list of NodeGroups
      */
     private void initNodeGroups(){
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("NodeGroup");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> parseNodeGroups, ParseException e) {
                 if (e == null) {
@@ -43,6 +42,7 @@ public class DBManager {
                         NodeGroup nodegroup = new NodeGroup(object);
                         NodeManager.getInstance().addNodeGroup(nodegroup);
                     }
+                    initNodes();
                 } else {
                     //something went wrong
                 }
@@ -55,26 +55,29 @@ public class DBManager {
      */
     private void initNodes(){
         Log.d("DBManager", "Trying to init nodes...");
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Node");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Node").setLimit(200);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> parseNodes, ParseException e) {
+
                 if (e == null) {
                     List<Node> nodes = new ArrayList<Node>();
                     //instantiate each node
+
                     for(ParseObject object: parseNodes){
                         Node node = new Node(object);
                         nodes.add(node);
 
-                        Log.d("DBManager", "added " + node.getName() + " to node list.");
+                        Log.d("DBManager", "added " + node.getId() + " to node list.");
                     }
+                    NodeManager.getInstance().putNodes(nodes);
+
                     //set each node's adjacent nodes
                     int i = 0;
                     for(ParseObject object: parseNodes){
                         nodes.get(i).setAdjacentNodes(object);
                         i++;
                     }
-
-                    NodeManager.getInstance().putNodes(nodes);
+                    isReady = true;
                 } else {
                     //something went wrong
                     System.out.println("DBManager.initNodes() : Parsenodes could not be found()");

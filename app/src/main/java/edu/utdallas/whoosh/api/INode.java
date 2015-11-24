@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-import edu.utdallas.woosh.appservices.NodeGroup;
+import edu.utdallas.whoosh.appservices.NodeGroup;
 
 /**
  * Data interface that represents a routable geographic point, as well as the various data describing it.
@@ -46,7 +46,7 @@ public interface INode {
     /**
      * a {@link List} of nodes directly routable from this one
      */
-    List<edu.utdallas.woosh.appservices.Node> getAdjacentNodes();
+    List<edu.utdallas.whoosh.appservices.Node> getAdjacentNodes();
 
     /**
      * a vertical qualifier for this geographic point, expressed in terms of its floor id within that building;

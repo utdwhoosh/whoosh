@@ -1,13 +1,14 @@
-package edu.utdallas.woosh.appservices;
+package edu.utdallas.whoosh.appservices;
 
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.StringTokenizer;
 
-import edu.utdallas.whoosh.api.INode;
-import edu.utdallas.whoosh.api.INodeGroup;
 import edu.utdallas.whoosh.api.NodeType;
 
 /**
@@ -34,8 +35,8 @@ public class NodeManager {
             Log.d("NodeManager", "added " + n.getName() + " to node list.");
             nodesByGroup.put(n.getGroup().getName(), new ArrayList<String>());
         }
-        if(!nodesBySubgroup.containsKey(n.getSubgroup())){
-            nodesBySubgroup.put(n.getSubgroup(), new ArrayList<String>());
+        if(!nodesBySubgroup.containsKey(n.getName().toLowerCase())){
+            nodesBySubgroup.put(n.getName().toLowerCase(), new ArrayList<String>());
         }
         if(!nodeTypes.containsKey(n.getType())){
             nodeTypes.put(n.getType(), new ArrayList<String>());
@@ -43,7 +44,7 @@ public class NodeManager {
 
         nodeTypes.get(n.getType()).add(n.getId());
         nodesByGroup.get(n.getGroup().getName()).add(n.getId());
-        nodesBySubgroup.get(n.getSubgroup()).add(n.getId());
+        nodesBySubgroup.get(n.getName().toLowerCase()).add(n.getId());
     }
 
     /**
@@ -64,6 +65,10 @@ public class NodeManager {
         return nodes.get(id);
     }
 
+    public Collection<Node> getNodes(){
+        return nodes.values();
+    }
+
     /**
      * Get a list of nodes in a particular group
      * @param group - NodeGroup to retrieve nodes from
@@ -77,18 +82,45 @@ public class NodeManager {
      * @param subgroup - Name of subgroup to retrieve nodes from
      * @return list of nodes*/
     public List<Node> getNodesFromSubgroup(String subgroup){
-        return getNodes(nodesBySubgroup.get(subgroup));
+        return getNodes(nodesBySubgroup.get(subgroup.toLowerCase()));
+    }
+
+    public List<Node> doNodeQuery(String query){
+        try{
+            String[] tokens = query.split(" ");
+            HashSet<Node> nodeSet = new HashSet<Node>();
+
+            if(tokens.length == 2){
+
+                for(Node n: getNodesFromSubgroup(tokens[1].toLowerCase())){
+                    if(n.getGroup().getName() == tokens[0].toUpperCase()){
+                        nodeSet.add(n);
+                    }
+                }
+            }
+            else{
+                nodeSet.addAll(getNodesFromSubgroup(query));
+            }
+            return new ArrayList<Node>(nodeSet);
+        }
+        catch(Exception e){
+            Log.d("NodeManager","Invalid query string");
+        }
+        return new ArrayList<Node>();
     }
 
     /**Get all nodes of a particular type
      * @param type - value of type of node to retrieve
      * @return list of nodes*/
     public List<Node> getNodesFromType(NodeType type){
-        return getNodes(nodeTypes.get(type));
+        if(nodeTypes.containsKey(type)){
+            return getNodes(nodeTypes.get(type));
+        }
+        else return new ArrayList<Node>();
     }
 
     public void addNodeGroup(NodeGroup n){
-        nodeGroups.put(n.getId(), n);
+        nodeGroups.put(n.getName(), n);
     }
 
     public NodeGroup getNodeGroup(String id){

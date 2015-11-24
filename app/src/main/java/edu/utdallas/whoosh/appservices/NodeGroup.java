@@ -1,9 +1,9 @@
-package edu.utdallas.woosh.appservices;
+package edu.utdallas.whoosh.appservices;
+
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseObject;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +37,8 @@ public class NodeGroup implements INodeGroup {
     NodeGroup(ParseObject object){
         this.id = object.getString("myID");
         this.name = object.getString("name");
+
+        Log.d(getClass().getName(), "name: "+name+ " grouptype: "+ object.getString("grouptype"));
         this.type = GroupType.valueOf(object.getString("grouptype"));
         this.floors = new ArrayList<Integer>(); floors = object.getList("floors");
         this.defaultFloor = object.getInt("defaultfloor");
