@@ -1,29 +1,23 @@
 package com.utdreqeng.whoosh.whoosh;
 
-import android.app.ActionBar;
 import android.content.Context;
-import android.opengl.Visibility;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.parse.Parse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +26,8 @@ import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.NodeType;
 import edu.utdallas.whoosh.api.RouteType;
 import edu.utdallas.whoosh.appservices.InitService;
-import edu.utdallas.whoosh.appservices.DBManager;
 import edu.utdallas.whoosh.appservices.LocationService;
 import edu.utdallas.whoosh.appservices.Node;
-import edu.utdallas.whoosh.appservices.NodeManager;
 import edu.utdallas.whoosh.appservices.RoutingService;
 
 public class MainActivity extends AppCompatActivity  {
