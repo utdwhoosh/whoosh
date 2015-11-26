@@ -23,6 +23,7 @@ public class RouteMap {
 
     private GoogleMap map;
     private LocationManager locationManager;
+    private LatLng loc;
 
     public RouteMap(Activity activity) {
         map = ((MapFragment) activity.getFragmentManager()
@@ -39,11 +40,15 @@ public class RouteMap {
         if(location==null){
             return;
         }
-        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+        loc = new LatLng(location.getLatitude(), location.getLongitude());
 
         map.addMarker(new MarkerOptions().position(loc));
         if(map != null){
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
         }
+    }
+
+    public LatLng getLastLocation(){
+        return loc;
     }
 }

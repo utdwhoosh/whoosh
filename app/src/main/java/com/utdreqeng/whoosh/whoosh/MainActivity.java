@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.Parse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,53 +48,14 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         // Enable Local Datastore
-        /*Parse.enableLocalDatastore(this);
+        Parse.enableLocalDatastore(this);
         Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_KEY);
 
         //Initialize the backend services
-        InitService.init(this.getApplicationContext());*/
+        InitService.init(this.getApplicationContext());
 
         // Register your parse models
         //ParseObject.registerSubclass(Node.class);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(!InitService.isReady()){
-                    try {
-                        Thread.sleep(500);
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                List<NodeType> types = new ArrayList<NodeType>();
-
-                for(NodeType t: NodeType.values()){
-                    if(t != NodeType.Stair){
-                        types.add(t);
-                    }
-                }
-
-                //for testing RoutingService & LocationService
-                Node start = LocationService.getInstance().getClosestNode(new LatLng(33.071865f, -96.750301f));
-                Node end = null;
-                List<INode> results = LocationService.getInstance().searchNodesByTypes("ATC 1.91", types);
-
-                if(results.size() != 0){
-                    end = (Node)results.get(0);
-                }
-                RoutingService rs = new RoutingService();
-
-                Log.d(getClass().getName(), "trying to build path");
-
-                String temp = "";
-                for(INode n: rs.getRoute(start, end, RouteType.Walking).getPath()){
-                    temp+=n.getId()+",";
-                }
-                Log.d(getClass().getName(),"Path="+temp);
-            }
-        }).start();
 
         setContentView(R.layout.activity_main);
         map = new RouteMap(this);
@@ -120,6 +82,50 @@ public class MainActivity extends AppCompatActivity  {
 
         setTopBar(0);
         map.locateUser();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(!InitService.isReady()){
+                    try {
+                        Thread.sleep(500);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                List<NodeType> types = new ArrayList<NodeType>();
+
+                for(NodeType t: NodeType.values()){
+                    if(t != NodeType.Stair){
+                        types.add(t);
+                    }
+                }
+
+                //for testing RoutingService & LocationService
+                LatLng location = map.getLastLocation();
+                Log.d(getClass().getName(), "Location: "+location.toString());
+
+                Node start = LocationService.getInstance().getClosestNode(location);
+                Node end = null;
+                List<INode> results = LocationService.getInstance().searchNodesByTypes("ATEC 2.908", types);
+
+                Log.d("MainActivity","Closest group: "+LocationService.getInstance().getClosestGroup(location).getName());
+
+                if(results.size() != 0){
+                    end = (Node)results.get(0);
+                }
+                RoutingService rs = new RoutingService();
+
+                Log.d(getClass().getName(), "trying to build path");
+
+                String temp = "";
+                for(INode n: rs.getRoute(start, end, RouteType.Walking).getPath()){
+                    temp+=n.getId()+",";
+                }
+                Log.d(getClass().getName(),"Path="+temp);
+            }
+        }).start();
     }
 
     private void setTopBar(int id){

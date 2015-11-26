@@ -92,14 +92,18 @@ public class NodeManager {
 
             if(tokens.length == 2){
 
+                if(tokens[0].compareTo("ATEC") == 0){
+                    tokens[0] = "ATC";
+                }
+
                 for(Node n: getNodesFromSubgroup(tokens[1].toLowerCase())){
-                    if(n.getGroup().getName() == tokens[0].toUpperCase()){
+                    if(n.getGroup().getName().compareTo(tokens[0].toUpperCase()) == 0){
                         nodeSet.add(n);
                     }
                 }
             }
             else{
-                nodeSet.addAll(getNodesFromSubgroup(query));
+                nodeSet.addAll(getNodesFromSubgroup(query.toLowerCase()));
             }
             return new ArrayList<Node>(nodeSet);
         }

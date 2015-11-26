@@ -21,11 +21,12 @@ public class MapImage extends ParseObject implements IMapImage
     private String groupName, resName;
     private int floor;
 
-    public MapImage(String resName, LatLng bottomLeft, LatLng topRight, String groupName, int floor){
+    public MapImage(int resId, LatLng bottomLeft, LatLng topRight, String groupName, int floor){
 
         this.bounds = new LatLngBounds(bottomLeft, topRight);
         this.groupName = groupName;
         this.floor = floor;
+        this.resId = resId;
     }
 
     /**
@@ -33,7 +34,7 @@ public class MapImage extends ParseObject implements IMapImage
      * @param ct - context retrieved from the application Activity
      */
     public void init(Context ct){
-        this.resId = ct.getResources().getIdentifier(resName, "id", ct.getPackageName());
+        //this.resId = ct.getResources().getIdentifier(resName, "id", ct.getPackageName());
     }
 
     @Override

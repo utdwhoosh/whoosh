@@ -67,16 +67,16 @@ public class LocationService implements ILocationService {
         HashSet<Node> tempSet = new HashSet<Node>();
 
         Iterator<NodeType> typeIterator = types.listIterator();
-        while(typeIterator.hasNext())
+        /*while(typeIterator.hasNext())
         {
-            //tempSet.addAll(manager.getNodesFromType(typeIterator.next()));
-        }
+            tempSet.addAll(manager.getNodesFromType(typeIterator.next()));
+        }*/
         tempSet.addAll(manager.doNodeQuery(query));
 
         return new ArrayList<INode>(tempSet);
     }
 
-    @Override
+    @Override //Not tested
     public List<INode> searchNodesByTypesAndGroup(String query, List<NodeType> types, INodeGroup group) {
         NodeManager manager = NodeManager.getInstance();
         Node currNode;
@@ -99,14 +99,12 @@ public class LocationService implements ILocationService {
                 }
             }
         }
-
-        //TODO: possibly add from Parse query rather than by subgroup
         tempSet.addAll(manager.getNodesFromSubgroup(query));
 
         return new ArrayList<INode>(tempSet);
     }
 
-    @Override
+    @Override //Not tested
     public List<Node> getNodesByTypesAndGroupAndFloor(List<NodeType> types, NodeGroup group, Integer floor) {
         Node currNode;
         List<Node> result = new ArrayList<>();
