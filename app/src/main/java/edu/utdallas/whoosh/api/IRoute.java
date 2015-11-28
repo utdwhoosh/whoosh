@@ -34,7 +34,7 @@ public interface IRoute {
     /**
      * the estimated length of time in minutes to complete this route, given its {@link #getType() mode of transit}
      */
-    int getTimeInMinutes();
+    float getTimeInMinutes();
 
     /**
      * the calculated distance in feet of this route

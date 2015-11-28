@@ -7,9 +7,9 @@ package edu.utdallas.whoosh.api;
  */
 public enum RouteType {
 
-    Walking(6),
-    Crutches(2),
-    Wheelchair(3),
+    Walking(4.5),
+    Crutches(1.5),
+    Wheelchair(2.5),
     ;
 
     private double rateInFeetPerSecond;
