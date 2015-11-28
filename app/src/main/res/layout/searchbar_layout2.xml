@@ -31,10 +31,11 @@
         android:layout_height="32dp"
         android:gravity="center"
         android:paddingRight="10dp"
-        android:background="@drawable/abc_ic_clear_mtrl_alpha"
+        android:background="@android:drawable/ic_notification_clear_all"
         android:backgroundTint="#000000"
         android:id="@+id/searchExitButton"
-        android:backgroundTintMode="src_atop" />
+        android:backgroundTintMode="src_atop"
+        android:alpha=".4" />
 
 
 

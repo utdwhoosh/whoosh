@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity  {
 
         setContentView(R.layout.activity_main);
         map = new RouteMap(this);
+        map.locateUser();
 
         ((FloatingActionButton)findViewById(R.id.navButtonTop)).setOnTouchListener(new View.OnTouchListener() {
             @Override
