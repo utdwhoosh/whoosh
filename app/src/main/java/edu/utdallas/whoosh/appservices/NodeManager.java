@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import edu.utdallas.whoosh.api.NodeType;
 
@@ -31,7 +30,7 @@ public class NodeManager {
     public void putNode(Node n){
         nodes.put(n.getId(), n);
 
-        if(!nodesByGroup.containsKey(n.getGroup().getName())){
+        if(!nodesByGroup.containsKey(n.getGroup().getId())){
             Log.d("NodeManager", "added " + n.getName() + " to node list.");
             nodesByGroup.put(n.getGroup().getName(), new ArrayList<String>());
         }
@@ -97,7 +96,7 @@ public class NodeManager {
                 }
 
                 for(Node n: getNodesFromSubgroup(tokens[1].toLowerCase())){
-                    if(n.getGroup().getName().compareTo(tokens[0].toUpperCase()) == 0){
+                    if(n.getGroup().getId().compareTo(tokens[0].toUpperCase()) == 0){
                         nodeSet.add(n);
                     }
                 }
@@ -124,7 +123,7 @@ public class NodeManager {
     }
 
     public void addNodeGroup(NodeGroup n){
-        nodeGroups.put(n.getName(), n);
+        nodeGroups.put(n.getId(), n);
     }
 
     public NodeGroup getNodeGroup(String id){
