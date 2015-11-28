@@ -2,7 +2,6 @@ package edu.utdallas.whoosh.appservices;
 
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -20,14 +19,16 @@ public class DBManager {
 
     private static DBManager instance = null;
     public static boolean isReady = false;
+    Callback initCallback;
 
     /**init(): initializes the data variables for the application*/
-    public void init(){
-        Log.d(getClass().getName(), "DBManager.init() : Initializing Nodes and NodeGroups..");
-        initNodeGroups();
-        //initNodes();
+    public void init(Callback callback){
 
-        Log.d(getClass().getName(), "DBManager.init() : Finished");
+        this.initCallback = callback;
+
+        Log.d(getClass().getName(), "DBManager.init(): Started");
+
+        initNodeGroups();
     }
 
     /**initNodeGroups(): retrieves all NodeGroup ParseObjects from Parse
@@ -45,6 +46,8 @@ public class DBManager {
                     initNodes();
                 } else {
                     //something went wrong
+                    Log.d(getClass().getName(), "DBManager.initNodeGroups(): " + e);
+                    initCallback.call(Boolean.FALSE);
                 }
             }
         });
@@ -77,10 +80,16 @@ public class DBManager {
                         nodes.get(i).setAdjacentNodes(object);
                         i++;
                     }
+
                     isReady = true;
+                    Log.d(getClass().getName(), "DBManager.init(): Finished");
+
+                    initCallback.call(Boolean.TRUE);
+
                 } else {
                     //something went wrong
-                    System.out.println("DBManager.initNodes() : Parsenodes could not be found()");
+                    Log.d(getClass().getName(), "DBManager.initNodes(): " + e);
+                    initCallback.call(Boolean.FALSE);
                 }
             }
         });

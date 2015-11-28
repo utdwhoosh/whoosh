@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,19 +16,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.parse.Parse;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.utdallas.whoosh.api.INode;
-import edu.utdallas.whoosh.api.NodeType;
-import edu.utdallas.whoosh.api.RouteType;
+import edu.utdallas.whoosh.appservices.Callback;
 import edu.utdallas.whoosh.appservices.InitService;
-import edu.utdallas.whoosh.appservices.LocationService;
-import edu.utdallas.whoosh.appservices.Node;
-import edu.utdallas.whoosh.appservices.RoutingService;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -50,12 +40,6 @@ public class MainActivity extends AppCompatActivity  {
         // Enable Local Datastore
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_KEY);
-
-        //Initialize the backend services
-        InitService.init(this.getApplicationContext());
-
-        // Register your parse models
-        //ParseObject.registerSubclass(Node.class);
 
         setContentView(R.layout.activity_main);
         map = new RouteMap(this);
@@ -81,51 +65,19 @@ public class MainActivity extends AppCompatActivity  {
         });
 
         setTopBar(0);
-        map.locateUser();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(!InitService.isReady()){
-                    try {
-                        Thread.sleep(500);
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+        //Initialize the backend services
+        InitService.init(
+                this.getApplicationContext(),
+                new Callback() {
+                    @Override
+                    public void call(boolean success) {
+                        if (success) {
+                            map.drawBuildings();
+                        }
                     }
                 }
-                List<NodeType> types = new ArrayList<NodeType>();
-
-                for(NodeType t: NodeType.values()){
-                    if(t != NodeType.Stair){
-                        types.add(t);
-                    }
-                }
-
-                //for testing RoutingService & LocationService
-                LatLng location = map.getLastLocation();
-                Log.d(getClass().getName(), "Location: "+location.toString());
-
-                Node start = LocationService.getInstance().getClosestNode(location);
-                Node end = null;
-                List<INode> results = LocationService.getInstance().searchNodesByTypes("ATEC 2.908", types);
-
-                Log.d("MainActivity","Closest group: "+LocationService.getInstance().getClosestGroup(location).getName());
-
-                if(results.size() != 0){
-                    end = (Node)results.get(0);
-                }
-                RoutingService rs = new RoutingService();
-
-                Log.d(getClass().getName(), "trying to build path");
-
-                String temp = "";
-                for(INode n: rs.getRoute(start, end, RouteType.Walking).getPath()){
-                    temp+=n.getId()+",";
-                }
-                Log.d(getClass().getName(),"Path="+temp);
-            }
-        }).start();
+        );
     }
 
     private void setTopBar(int id){

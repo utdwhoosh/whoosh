@@ -2,22 +2,28 @@ package edu.utdallas.whoosh.appservices;
 
 import android.content.Context;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.utdreqeng.whoosh.whoosh.R;
-
 /**
  * Created by Dustin on 10/8/2015.
  */
 public class InitService {
 
-    public static void init(Context context){
+    public static void init(final Context context, final Callback callback){
 
-        LocationService.getInstance().init(context);
-        DBManager.getInstance().init();
+        DBManager.getInstance().init(new Callback() {
+            @Override
+            public void call(boolean success) {
 
-        //TODO: for each group and floor, create a relevant MapImage object and add to LocationService
-        /*LocationService.getInstance().putMapImage(new MapImage(R.drawable.atc1, new LatLng(), new LatLng(),
-                "ATC", 1));*/
+                if (success) {
+                    LocationService.getInstance().init(context);
+
+                    //TODO: for each group and floor, create a relevant MapImage object and add to LocationService
+                    /*LocationService.getInstance().putMapImage(new MapImage(R.drawable.atc1, new LatLng(), new LatLng(),
+                        "ATC", 1));*/
+                }
+
+                callback.call(success);
+            }
+        });
     }
 
     public static boolean isReady(){
