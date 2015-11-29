@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.AdapterView; //x
+import android.widget.ArrayAdapter; //x
+import android.widget.ListView; //x
+import android.widget.Toast; //x
 
 import com.parse.Parse;
 
@@ -25,11 +29,28 @@ public class MainActivity extends AppCompatActivity  {
     private View lastTopBar = null;
     private RouteMap map;
 
+    private ListView mDrawerList; //x
+    private ArrayAdapter<String> mAdapter; //x
+
+    private void addDrawerItems() { //x
+        String[] osArray = { "Directory", "Maps", "Help" };
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mDrawerList.setAdapter(mAdapter);
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() { //x
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_main);
+        mDrawerList = (ListView)findViewById(R.id.navList); //x
+        addDrawerItems(); //x
         // Enable Local Datastore
         /*Parse.enableLocalDatastore(this);
         Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_KEY);
@@ -40,7 +61,6 @@ public class MainActivity extends AppCompatActivity  {
         // Register your parse models
         //ParseObject.registerSubclass(Node.class);
 
-        setContentView(R.layout.activity_main);
         map = new RouteMap(this);
 
         ((FloatingActionButton)findViewById(R.id.navButtonTop)).setOnTouchListener(new View.OnTouchListener() {
