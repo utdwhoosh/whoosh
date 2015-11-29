@@ -1,7 +1,7 @@
 package edu.utdallas.whoosh.api;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Data interface that aggregates a graphical asset with its metadata (right now, just the latitude/longitude
@@ -16,8 +16,9 @@ public interface IMapImage {
      */
     BitmapDescriptor getImage();
 
-    /**
-     * the latitude/longitude bounds covered by this map
-     */
-    LatLngBounds getBounds();
+    LatLng getBottomLeftCoordinates();
+    LatLng getTomRightCoordinates();
+
+    INodeGroup getGroup();
+    Integer getFloor();
 }

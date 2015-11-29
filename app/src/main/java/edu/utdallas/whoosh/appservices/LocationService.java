@@ -105,13 +105,13 @@ public class LocationService implements ILocationService {
     }
 
     @Override //Not tested
-    public List<Node> getNodesByTypesAndGroupAndFloor(List<NodeType> types, NodeGroup group, Integer floor) {
+    public List<INode> getNodesByTypesAndGroupAndFloor(List<NodeType> types, INodeGroup group, Integer floor) {
         Node currNode;
         List<Node> result = new ArrayList<>();
         Iterator<NodeType> typeIterator;
         NodeManager manager = NodeManager.getInstance();
 
-        List<Node> nodesByGroup = manager.getNodesFromGroup(group);
+        List<Node> nodesByGroup = manager.getNodesFromGroup((NodeGroup)group);
         Iterator<Node> groupIterator = nodesByGroup.listIterator();
 
         while(groupIterator.hasNext())
@@ -130,7 +130,7 @@ public class LocationService implements ILocationService {
             }
         }
 
-        return result;
+        return new ArrayList<INode>(result);
     }
 
     @Override
@@ -184,13 +184,8 @@ public class LocationService implements ILocationService {
     }
 
     @Override
-    public IMapImage getCampusMap() {
-        return campusMap;
-    }
-
-    @Override
     public IMapImage getGroupMap(INodeGroup group, Integer floor) {
-        return mapImages.get(getImageKey(group.getName(), floor));
+        return mapImages.get(getImageKey(group, floor));
     }
 
     public static LocationService getInstance() {
@@ -204,13 +199,15 @@ public class LocationService implements ILocationService {
         this.context = c;
     }
 
-    public void putMapImage(MapImage image) {
-
-        image.init(context);
-        mapImages.put(getImageKey(image.getGroupName(), image.getFloor()), image);
+    public void putMapImage(IMapImage image) {
+        mapImages.put(getImageKey(image), image);
     }
 
-    private String getImageKey(String groupName, int floor) {
-        return groupName + floor;
+    private String getImageKey(IMapImage image) {
+        return this.getImageKey(image.getGroup(), image.getFloor());
+    }
+
+    private String getImageKey(INodeGroup group, Integer floor) {
+        return group.getId() + floor;
     }
 }

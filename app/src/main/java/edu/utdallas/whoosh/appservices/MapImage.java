@@ -1,57 +1,57 @@
 package edu.utdallas.whoosh.appservices;
 
-import android.content.Context;
-
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.parse.ParseObject;
-import com.utdreqeng.whoosh.whoosh.R;
 
 import edu.utdallas.whoosh.api.IMapImage;
+import edu.utdallas.whoosh.api.INodeGroup;
 
 /**
  * Created by Dustin on 10/7/2015.
  */
-public class MapImage extends ParseObject implements IMapImage
+public class MapImage implements IMapImage
 {
-    private int resId;
-    private LatLngBounds bounds;
-    private String groupName, resName;
-    private int floor;
+    private INodeGroup group;
+    private Integer floor;
+    private LatLng bottomLeft;
+    private LatLng topRight;
 
-    public MapImage(int resId, LatLng bottomLeft, LatLng topRight, String groupName, int floor){
+    private BitmapDescriptor image;
 
-        this.bounds = new LatLngBounds(bottomLeft, topRight);
-        this.groupName = groupName;
+
+
+    public MapImage(INodeGroup group, Integer floor, LatLng bottomLeft, LatLng topRight, BitmapDescriptor image) {
+        this.group = group;
         this.floor = floor;
-        this.resId = resId;
+        this.bottomLeft = bottomLeft;
+        this.topRight = topRight;
+
+        this.image = image;
     }
 
-    /**
-     * Must be called before the image can be used.
-     * @param ct - context retrieved from the application Activity
-     */
-    public void init(Context ct){
-        //this.resId = ct.getResources().getIdentifier(resName, "id", ct.getPackageName());
-    }
 
     @Override
     public BitmapDescriptor getImage() {
-        return BitmapDescriptorFactory.fromResource(resId);
+        return this.image;
     }
 
     @Override
-    public LatLngBounds getBounds() {
-        return bounds;
+    public LatLng getBottomLeftCoordinates() {
+        return this.bottomLeft;
     }
 
-    public String getGroupName(){
-        return groupName;
+    @Override
+    public LatLng getTomRightCoordinates() {
+        return this.topRight;
     }
 
-    public int getFloor(){
-        return floor;
+    @Override
+    public INodeGroup getGroup() {
+        return this.group;
+    }
+
+    @Override
+    public Integer getFloor() {
+        return this.floor;
     }
 }
