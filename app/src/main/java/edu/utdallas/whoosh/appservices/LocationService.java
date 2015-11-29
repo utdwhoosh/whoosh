@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.security.acl.Group;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -66,8 +67,8 @@ public class LocationService implements ILocationService {
         NodeManager manager = NodeManager.getInstance();
         HashSet<Node> tempSet = new HashSet<Node>();
 
-        Iterator<NodeType> typeIterator = types.listIterator();
-        /*while(typeIterator.hasNext())
+        /*Iterator<NodeType> typeIterator = types.listIterator();
+        while(typeIterator.hasNext())
         {
             tempSet.addAll(manager.getNodesFromType(typeIterator.next()));
         }*/
@@ -81,11 +82,10 @@ public class LocationService implements ILocationService {
         NodeManager manager = NodeManager.getInstance();
         Node currNode;
 
-        List<Node> nodesByGroup = manager.getNodesFromGroup((NodeGroup)group);
+        HashSet<INode> tempSet = new HashSet<INode>();
+        /*tempSet.addAll(manager.getNodesFromGroup((NodeGroup)group));
         Iterator<Node> groupIterator = nodesByGroup.listIterator();
         Iterator<NodeType> typeIterator;
-
-        HashSet<Node> tempSet = new HashSet<Node>();
 
         while(groupIterator.hasNext())
         {
@@ -98,15 +98,23 @@ public class LocationService implements ILocationService {
                     tempSet.add(currNode);
                 }
             }
+        }*/
+        if(query==null){
+            tempSet.addAll(NodeManager.getInstance().getNodesFromGroup((NodeGroup)group));
         }
-        tempSet.addAll(manager.getNodesFromSubgroup(query));
-
+        else {
+            for(INode n: searchNodesByTypes(query, types)){
+                if(n.getGroup().getId().compareTo(group.getId()) == 0){
+                    tempSet.add(n);
+                }
+            }
+        }
         return new ArrayList<INode>(tempSet);
     }
 
     @Override //Not tested
     public List<INode> getNodesByTypesAndGroupAndFloor(List<NodeType> types, INodeGroup group, Integer floor) {
-        Node currNode;
+        /*Node currNode;
         List<Node> result = new ArrayList<>();
         Iterator<NodeType> typeIterator;
         NodeManager manager = NodeManager.getInstance();
@@ -128,9 +136,15 @@ public class LocationService implements ILocationService {
                     }
                 }
             }
-        }
+        }*/
+        HashSet<INode> tempSet = new HashSet<INode>();
 
-        return new ArrayList<INode>(result);
+        for(INode n: searchNodesByTypesAndGroup(null, types, group)){
+            if(n.getFloor() == floor){
+                tempSet.add(n);
+            }
+        }
+        return new ArrayList<INode>(tempSet);
     }
 
     @Override
@@ -152,7 +166,7 @@ public class LocationService implements ILocationService {
             latDif = coordinates.latitude - currGroup.getCenterCoordinates().latitude;
             lngDif = coordinates.longitude - currGroup.getCenterCoordinates().longitude;
 
-            currDistance = Math.sqrt((latDif*latDif) + (lngDif*lngDif));
+            currDistance = Math.sqrt((latDif * latDif) + (lngDif * lngDif));
             if(shortestDistance == -1.0
                     || shortestDistance > currDistance)
             {
