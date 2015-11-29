@@ -141,6 +141,6 @@ public class Node implements INode {
                 Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2)))));
 
         //kilometers to feet
-        return (result * 1000) * .3048f;
+        return (result * 1000) * 3.28084f;
     }
 }

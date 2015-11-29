@@ -1,5 +1,7 @@
 package edu.utdallas.whoosh.appservices;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +16,21 @@ public class Route implements IRoute {
 
     private List<Node> nodes;
     private RouteType type;
+    private int distanceInFeet=0;
+    private float time=0;
 
     public Route(List<Node> nodes, RouteType type)
     {
         this.nodes = new ArrayList<Node>(nodes);
         this.type = type;
+
+        float tempDistance = 0;
+
+        for(int i=0; i<nodes.size()-1; i++){
+            tempDistance += Node.distanceInFeet(nodes.get(i), nodes.get(i+1));
+        }
+        distanceInFeet = (int)tempDistance;
+        time = (float)((tempDistance / type.getRateInFeetPerSecond()) / 60);
     }
 
     @Override
@@ -42,16 +54,12 @@ public class Route implements IRoute {
     }
 
     @Override
-    public int getTimeInMinutes() {
-
-        //TODO: implement
-        return 0;
+    public float getTimeInMinutes() {
+        return time;
     }
 
     @Override
     public int getDistanceInFeet() {
-
-        //TODO: implement
-        return 0;
+        return distanceInFeet;
     }
 }

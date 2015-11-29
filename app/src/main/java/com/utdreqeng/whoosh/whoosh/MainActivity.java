@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +19,18 @@ import android.widget.TextView;
 
 import com.parse.Parse;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import edu.utdallas.whoosh.api.INode;
+import edu.utdallas.whoosh.api.IRoute;
+import edu.utdallas.whoosh.api.RouteType;
 import edu.utdallas.whoosh.appservices.Callback;
 import edu.utdallas.whoosh.appservices.InitService;
+import edu.utdallas.whoosh.appservices.LocationService;
+import edu.utdallas.whoosh.appservices.NodeManager;
+import edu.utdallas.whoosh.appservices.Route;
+import edu.utdallas.whoosh.appservices.RoutingService;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -79,6 +90,24 @@ public class MainActivity extends AppCompatActivity  {
                     }
                 }
         );
+    }
+
+    private void showBottomBar(float time, INode destination){
+
+        View temp = findViewById(R.id.bottomBar);
+        double rTime = Math.round(time * 100f) / 100;
+
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.MILLISECOND, (int) (time * 60000f));
+
+        temp.setVisibility(View.VISIBLE);
+        ((TextView)temp.findViewById(R.id.bottom_destination)).setText(destination.getGroup().getId() + " " + destination.getName());
+        ((TextView)temp.findViewById(R.id.bottom_time)).setText("" + rTime + " min");
+        ((TextView)temp.findViewById(R.id.bottom_eta)).setText("ETA: " + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE));
+    }
+
+    private void hideBottomBar(){
+        findViewById(R.id.bottomBar).setVisibility(View.INVISIBLE);
     }
 
     private void setTopBar(int id){
