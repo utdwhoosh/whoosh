@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity  {
 
                 }
                 else if(position == 2){
-
+                    startActivityForResult(new Intent(getApplicationContext(), DirectoryActivity.class), RESULT_OK);
                 }
                 else if(position == 3){
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://utdwhoosh.github.io/")));

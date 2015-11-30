@@ -2,6 +2,9 @@ package edu.utdallas.whoosh.appservices;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
 import com.utdreqeng.whoosh.whoosh.R;
 

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -302,7 +303,7 @@ public class RouteMap {
                         .position(route.getOrigin().getCoordinates())
                         .title(route.getOrigin().getType().name())
                         .snippet("[" + route.getOrigin().getId() + "]" + " " + route.getOrigin().getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.route_start))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start))
                         .anchor(0.5f, 0.5f)
         );
         this.routeMarkers.add(marker);
@@ -310,7 +311,7 @@ public class RouteMap {
                         .position(route.getDestination().getCoordinates())
                         .title(route.getDestination().getType().name())
                         .snippet("[" + route.getDestination().getId() + "]" + " " + route.getDestination().getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.route_finish))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.finish))
                         .anchor(0.5f, 0.5f)
         );
         this.routeMarkers.add(marker);
@@ -321,6 +322,7 @@ public class RouteMap {
         for (INode node : route.getPath()) {
             points.add(node.getCoordinates());
             boundsBuilder.include(node.getCoordinates());
+            Log.d("RouteMap", "Path: " + node.getId());
         }
         this.routeLine = this.map.addPolyline(new PolylineOptions()
                         .addAll(points)

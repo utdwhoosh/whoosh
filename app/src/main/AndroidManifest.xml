@@ -24,10 +24,22 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
+            android:noHistory="false"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".DirectoryActivity"
+            android:screenOrientation="portrait"
+            android:noHistory="true"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.APP_CONTACTS" />
             </intent-filter>
         </activity>
     </application>
