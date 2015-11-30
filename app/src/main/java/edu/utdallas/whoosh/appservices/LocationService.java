@@ -67,12 +67,17 @@ public class LocationService implements ILocationService {
         NodeManager manager = NodeManager.getInstance();
         HashSet<Node> tempSet = new HashSet<Node>();
 
+
+
         /*Iterator<NodeType> typeIterator = types.listIterator();
         while(typeIterator.hasNext())
         {
             tempSet.addAll(manager.getNodesFromType(typeIterator.next()));
         }*/
-        tempSet.addAll(manager.doNodeQuery(query));
+        try{
+            tempSet.addAll(manager.doNodeQuery(query));
+        }
+        catch(Exception e){}
 
         return new ArrayList<INode>(tempSet);
     }
@@ -185,8 +190,7 @@ public class LocationService implements ILocationService {
         List<INodeGroup> groupsByType = new ArrayList<>();
         NodeGroup currGroup;
         Iterator<NodeGroup> iterator = groups.listIterator();
-        while(iterator.hasNext())
-        {
+        while(iterator.hasNext()) {
             currGroup = iterator.next();
             if(currGroup.getType() == type)
             {

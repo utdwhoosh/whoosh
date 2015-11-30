@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.Parse;
 
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity  {
     private View lastTopBar = null;
     private int lastTopId = 0;
     private RouteMap map;
+    private RoutingService routingService;
     //private Route currentRoute;
 
     @Override
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity  {
                     public void call(boolean success) {
                         if (success) {
                             map.drawBuildings();
+                            routingService = new RoutingService();
                         }
                     }
                 }
@@ -116,6 +119,7 @@ public class MainActivity extends AppCompatActivity  {
     private void setTopBar(int id){
 
         View temp = null;
+        hideBottomBar();
 
         if(lastTopBar != null){
             lastTopBar.clearFocus();
@@ -169,8 +173,38 @@ public class MainActivity extends AppCompatActivity  {
                     }
 
                     temp = getLayoutInflater().inflate(R.layout.navigation_layout, null);
-                    ((EditText)temp.findViewById(R.id.nav_fieldStart)).setText(startText);
+                    final EditText et = ((EditText) temp.findViewById(R.id.nav_fieldEnd));
+
+                    ((EditText) temp.findViewById(R.id.nav_fieldStart)).setText(startText);
                     ((EditText)temp.findViewById(R.id.nav_fieldEnd)).setText(endText);
+                    ((EditText)temp.findViewById(R.id.nav_fieldEnd)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                                INode start = LocationService.getInstance().getClosestNode(map.getLastLocation());
+                                List<INode> endPoints = LocationService.getInstance().searchNodesByTypes(et.getText().toString(), null);
+
+                                if(endPoints.size() == 0){
+                                    v.setText("");
+                                    Toast.makeText(getApplicationContext(), "Invalid destination", Toast.LENGTH_SHORT).show();
+                                    hideBottomBar();
+                                }
+                                else{
+                                    INode end = endPoints.get(0);
+                                    IRoute temp = routingService.getRoute(start, end, RouteType.Walking);
+                                    showBottomBar(temp.getTimeInMinutes(), end);
+
+                                    String s = "";
+                                    for(INode n: temp.getPath()){
+                                        s = s+n.getId()+",";
+                                    }
+                                    Log.d("MainActivity","Path: "+s);
+                                }
+                            }
+                            return false;
+                        }
+                    });
 
                     ((Button)temp.findViewById(R.id.nav_screen_backButton)).setOnTouchListener(new View.OnTouchListener() {
                         @Override
@@ -196,10 +230,12 @@ public class MainActivity extends AppCompatActivity  {
         }
 
         if(id == 2){
-            ((FloatingActionButton)findViewById(R.id.navButtonBottom2)).setVisibility(View.VISIBLE);
+            ((FloatingActionButton)findViewById(R.id.upButton)).setVisibility(View.VISIBLE);
+            ((FloatingActionButton)findViewById(R.id.downButton)).setVisibility(View.VISIBLE);
         }
         else{
-            ((FloatingActionButton)findViewById(R.id.navButtonBottom2)).setVisibility(View.INVISIBLE);
+            ((FloatingActionButton)findViewById(R.id.upButton)).setVisibility(View.INVISIBLE);
+            ((FloatingActionButton)findViewById(R.id.downButton)).setVisibility(View.INVISIBLE);
         }
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,

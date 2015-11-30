@@ -91,7 +91,7 @@ public class NodeManager {
 
             if(tokens.length == 2){
 
-                if(tokens[0].compareTo("ATEC") == 0){
+                if(tokens[0].toUpperCase().compareTo("ATEC") == 0){
                     tokens[0] = "ATC";
                 }
 
