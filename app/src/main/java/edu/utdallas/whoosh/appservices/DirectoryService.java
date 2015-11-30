@@ -1,8 +1,13 @@
 package edu.utdallas.whoosh.appservices;
 
+import android.content.Context;
+
+import com.utdreqeng.whoosh.whoosh.R;
+
 import edu.utdallas.whoosh.api.IDirectoryService;
 import edu.utdallas.whoosh.appservices.Contact;
 
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -29,6 +34,11 @@ public class DirectoryService implements IDirectoryService{
     private static final int phoneNumberIndex = 2;
     private static final int emailAddressIndex = 3;
     private static final int urlIndex = 4;
+    private Context ct;
+
+    public DirectoryService(Context ct){
+        this.ct = ct;
+    }
 
     /**
      * Reads contacts file and returns list of all contacts
@@ -43,10 +53,8 @@ public class DirectoryService implements IDirectoryService{
         List<Contact> contacts = new ArrayList<>();
         Contact currContact = new Contact();
 
-        File contactsFile = new File(contactsFileDir + contactsFileName);
-
         try {
-            Scanner contactsFileReader = new Scanner(contactsFile);
+            Scanner contactsFileReader = new Scanner(ct.getResources().openRawResource(R.raw.contacts));
             while(contactsFileReader.hasNextLine())
             {
                 fileInput = contactsFileReader.nextLine();
@@ -66,9 +74,9 @@ public class DirectoryService implements IDirectoryService{
                 }
             }
         }
-        catch(FileNotFoundException ex) {
+        /*catch(FileNotFoundException ex) {
             System.out.println("WARNING: contacts.txt file not found in expected location (" + contactsFileDir + "). Contact tech support or replace file.");
-        }
+        }*/
         catch(Exception ex) {
             System.out.println("FATAL: Unexpected exception occurred. Contact tech support.");
         }

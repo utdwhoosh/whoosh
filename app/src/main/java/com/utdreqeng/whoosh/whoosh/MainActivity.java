@@ -1,6 +1,10 @@
 package com.utdreqeng.whoosh.whoosh;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +16,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +30,14 @@ import com.parse.Parse;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.jar.Attributes;
 
 import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.IRoute;
 import edu.utdallas.whoosh.api.RouteType;
 import edu.utdallas.whoosh.appservices.Callback;
+import edu.utdallas.whoosh.appservices.Contact;
+import edu.utdallas.whoosh.appservices.DirectoryService;
 import edu.utdallas.whoosh.appservices.InitService;
 import edu.utdallas.whoosh.appservices.LocationService;
 import edu.utdallas.whoosh.appservices.RoutingService;
@@ -87,10 +98,32 @@ public class MainActivity extends AppCompatActivity  {
                         if (success) {
                             map.initMap();
                             routingService = new RoutingService();
+
+                            for(Contact c: new DirectoryService(getApplicationContext()).getContacts()){
+                                Log.d("MainActivity","Contact: "+c.getId()+" name: "+c.getName());
+                            }
                         }
                     }
                 }
         );
+
+        String[] osArray = { "Campus Map", "Directory", "About" };
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        ListView mDrawerList = (ListView)findViewById(R.id.navList);
+
+        ImageView iv = new ImageView(getApplicationContext());
+        iv.setImageResource(R.drawable.nav_title);
+        mDrawerList.addHeaderView(iv);
+
+        mDrawerList.setAdapter(mAdapter);
+
+        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), "Do Something", Toast.LENGTH_SHORT).show();
+                Log.d("MainActivity","Clicked "+position);
+            }
+        });
     }
 
     private void showBottomBar(float time, INode destination){
@@ -167,28 +200,27 @@ public class MainActivity extends AppCompatActivity  {
                         endText = ((EditText)lastTopBar.findViewById(R.id.searchBox)).getText().toString();
                     }
 
-                    temp = getLayoutInflater().inflate(R.layout.navigation_layout, null);
-                    final EditText et = ((EditText) temp.findViewById(R.id.nav_fieldEnd));
+                temp = getLayoutInflater().inflate(R.layout.navigation_layout, null);
+                final EditText et = ((EditText) temp.findViewById(R.id.nav_fieldEnd));
 
-                    ((EditText) temp.findViewById(R.id.nav_fieldStart)).setText(startText);
-                    ((EditText)temp.findViewById(R.id.nav_fieldEnd)).setText(endText);
-                    ((EditText)temp.findViewById(R.id.nav_fieldEnd)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                        @Override
-                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                ((EditText) temp.findViewById(R.id.nav_fieldStart)).setText(startText);
+                ((EditText) temp.findViewById(R.id.nav_fieldEnd)).setText(endText);
+                ((EditText) temp.findViewById(R.id.nav_fieldEnd)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-                            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                                INode start = LocationService.getInstance().getClosestNode(map.getLastLocation());
-                                List<INode> endPoints = LocationService.getInstance().searchNodesByTypes(et.getText().toString(), null);
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            INode start = LocationService.getInstance().getClosestNode(map.getLastLocation());
+                            List<INode> endPoints = LocationService.getInstance().searchNodesByTypes(et.getText().toString(), null);
 
-                                if(endPoints.size() == 0){
-                                    v.setText("");
-                                    Toast.makeText(getApplicationContext(), "Invalid destination", Toast.LENGTH_SHORT).show();
-                                    hideBottomBar();
-                                }
-                                else{
-                                    INode end = endPoints.get(0);
-                                    IRoute temp = routingService.getRoute(start, end, RouteType.Walking);
-                                    showBottomBar(temp.getTimeInMinutes(), end);
+                            if (endPoints.size() == 0) {
+                                v.setText("");
+                                Toast.makeText(getApplicationContext(), "Invalid destination", Toast.LENGTH_SHORT).show();
+                                hideBottomBar();
+                            } else {
+                                INode end = endPoints.get(0);
+                                IRoute temp = routingService.getRoute(start, end, RouteType.Walking);
+                                showBottomBar(temp.getTimeInMinutes(), end);
 
                                     String s = "";
                                     for(INode n: temp.getPath()){
