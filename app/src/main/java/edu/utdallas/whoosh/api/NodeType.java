@@ -81,4 +81,13 @@ public enum NodeType {
 
         return results;
     }
+
+    public static List<NodeType> getAll(){
+        List<NodeType> results = new ArrayList<>();
+
+        for(NodeType t: values()){
+            results.add(t);
+        }
+        return results;
+    }
 }

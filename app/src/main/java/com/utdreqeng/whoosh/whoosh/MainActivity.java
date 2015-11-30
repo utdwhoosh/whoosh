@@ -1,10 +1,12 @@
 package com.utdreqeng.whoosh.whoosh;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +36,7 @@ import java.util.jar.Attributes;
 
 import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.IRoute;
+import edu.utdallas.whoosh.api.NodeType;
 import edu.utdallas.whoosh.api.RouteType;
 import edu.utdallas.whoosh.appservices.Callback;
 import edu.utdallas.whoosh.appservices.Contact;
@@ -116,8 +119,15 @@ public class MainActivity extends AppCompatActivity  {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Do Something", Toast.LENGTH_SHORT).show();
-                Log.d("MainActivity","Clicked "+position);
+                if(position == 1){
+
+                }
+                else if(position == 2){
+
+                }
+                else if(position == 3){
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://utdwhoosh.github.io/")));
+                }
             }
         });
     }
@@ -196,40 +206,72 @@ public class MainActivity extends AppCompatActivity  {
                         endText = ((EditText)lastTopBar.findViewById(R.id.searchBox)).getText().toString();
                     }
 
-                temp = getLayoutInflater().inflate(R.layout.navigation_layout, null);
-                final EditText et = ((EditText) temp.findViewById(R.id.nav_fieldEnd));
+                    temp = getLayoutInflater().inflate(R.layout.navigation_layout, null);
+                    final EditText etEnd = ((EditText) temp.findViewById(R.id.nav_fieldEnd));
+                    final EditText etStart = ((EditText) temp.findViewById(R.id.nav_fieldStart));
 
-                ((EditText) temp.findViewById(R.id.nav_fieldStart)).setText(startText);
-                ((EditText) temp.findViewById(R.id.nav_fieldEnd)).setText(endText);
-                ((EditText) temp.findViewById(R.id.nav_fieldEnd)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    ((EditText) temp.findViewById(R.id.nav_fieldStart)).setText(startText);
+                    ((EditText) temp.findViewById(R.id.nav_fieldStart)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            INode start = LocationService.getInstance().getClosestNode(map.getLastLocation());
-                            List<INode> endPoints = LocationService.getInstance().searchNodesByTypes(et.getText().toString(), null);
+                            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                                ((EditText) etEnd.findViewById(R.id.nav_fieldEnd)).requestFocus();
+                            }
 
-                            if (endPoints.size() == 0) {
-                                v.setText("");
-                                Toast.makeText(getApplicationContext(), "Invalid destination", Toast.LENGTH_SHORT).show();
-                                hideBottomBar();
-                            } else {
-                                INode end = endPoints.get(0);
-                                IRoute temp = routingService.getRoute(start, end, RouteType.Walking);
-                                showBottomBar(temp.getTimeInMinutes(), end);
+                            return false;
+                        }
+                    });
 
-                                    String s = "";
-                                    for(INode n: temp.getPath()){
-                                        s = s+n.getId()+",";
+                    ((EditText) temp.findViewById(R.id.nav_fieldEnd)).setText(endText);
+                    ((EditText) temp.findViewById(R.id.nav_fieldEnd)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                            if (actionId == EditorInfo.IME_ACTION_DONE) {
+
+                                INode start = null;
+                                List<INode> endPoints = LocationService.getInstance().searchNodesByTypes(
+                                        etEnd.getText().toString(), NodeType.getAll());
+
+                                if (etStart.getText().toString().compareTo("My Location") == 0) {
+                                    start = LocationService.getInstance().getClosestNode(map.getLastLocation());
+                                } else {
+                                    List<INode> startPoints = LocationService.getInstance().searchNodesByTypes(
+                                            etStart.getText().toString(), NodeType.getAll());
+
+                                    if (startPoints.size() == 0) {
+                                        etStart.setText("");
+                                    } else {
+                                        start = startPoints.get(0);
                                     }
-                                    Log.d("MainActivity","Path: "+s);
+                                }
+
+                                if (start != null) {
+                                    if (endPoints.size() == 0) {
+                                        v.setText("");
+                                        Toast.makeText(getApplicationContext(), "Invalid destination", Toast.LENGTH_SHORT).show();
+                                        hideBottomBar();
+                                    } else {
+                                        INode end = endPoints.get(0);
+                                        IRoute temp = routingService.getRoute(start, end, RouteType.Walking);
+                                        showBottomBar(temp.getTimeInMinutes(), end);
+
+                                        String s = "";
+                                        for (INode n : temp.getPath()) {
+                                            s = s + n.getId() + ",";
+                                        }
+                                        Log.d("MainActivity", "Path: " + s);
+                                    }
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Invalid start point", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             return false;
                         }
                     });
 
-                    ((Button)temp.findViewById(R.id.nav_screen_backButton)).setOnTouchListener(new View.OnTouchListener() {
+                    ((Button) temp.findViewById(R.id.nav_screen_backButton)).setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
                             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -237,44 +279,61 @@ public class MainActivity extends AppCompatActivity  {
                             }
                             return false;
                         }
-                    }); break;
+                    });
+                    break;
 
-            default: break;
-        }
+                    default:
+                    break;
+                }
 
+                if(id==0||id==1)
 
-        if(id == 0 || id == 1){
-            ((FloatingActionButton)findViewById(R.id.navButtonBottom)).setVisibility(View.VISIBLE);
-            ((FloatingActionButton)findViewById(R.id.navButtonTop)).setVisibility(View.VISIBLE);
-        }
-        else{
-            ((FloatingActionButton)findViewById(R.id.navButtonBottom)).setVisibility(View.INVISIBLE);
-            ((FloatingActionButton)findViewById(R.id.navButtonTop)).setVisibility(View.INVISIBLE);
-        }
+                {
+                    ((FloatingActionButton) findViewById(R.id.navButtonBottom)).setVisibility(View.VISIBLE);
+                    ((FloatingActionButton) findViewById(R.id.navButtonTop)).setVisibility(View.VISIBLE);
+                }
 
-        if(id == 2){
-            ((FloatingActionButton)findViewById(R.id.upButton)).setVisibility(View.VISIBLE);
-            ((FloatingActionButton)findViewById(R.id.downButton)).setVisibility(View.VISIBLE);
-        }
-        else{
-            ((FloatingActionButton)findViewById(R.id.upButton)).setVisibility(View.INVISIBLE);
-            ((FloatingActionButton)findViewById(R.id.downButton)).setVisibility(View.INVISIBLE);
-        }
+                else
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                {
+                    ((FloatingActionButton) findViewById(R.id.navButtonBottom)).setVisibility(View.INVISIBLE);
+                    ((FloatingActionButton) findViewById(R.id.navButtonTop)).setVisibility(View.INVISIBLE);
+                }
 
-        ((RelativeLayout)findViewById(R.id.mainLayout)).addView(temp, params);
-        lastTopBar = temp;
-        lastTopId = id;
-    }
+                if(id==2)
 
-    private void openKeyboard(){
+                {
+                    ((FloatingActionButton) findViewById(R.id.upButton)).setVisibility(View.VISIBLE);
+                    ((FloatingActionButton) findViewById(R.id.downButton)).setVisibility(View.VISIBLE);
+                }
+
+                else
+
+                {
+                    ((FloatingActionButton) findViewById(R.id.upButton)).setVisibility(View.INVISIBLE);
+                    ((FloatingActionButton) findViewById(R.id.downButton)).setVisibility(View.INVISIBLE);
+                }
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+                ((RelativeLayout)
+
+                findViewById(R.id.mainLayout)
+
+                ).
+
+                addView(temp, params);
+
+                lastTopBar=temp;
+                lastTopId=id;
+            }
+
+        private void openKeyboard(){
         ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
                 InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

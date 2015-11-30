@@ -78,11 +78,10 @@ public class LocationService implements ILocationService {
         Iterator<Node> i = tempSet.iterator();
         while (i.hasNext()) {
             Node n = i.next();
-            if (types.contains(n.getType()) != true) {
+            if (!types.contains(n.getType())) {
                 i.remove();
             }
         }
-
         return new ArrayList<INode>(tempSet);
     }
 
