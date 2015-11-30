@@ -2,6 +2,8 @@ package edu.utdallas.whoosh.api;
 
 import java.util.List;
 
+import edu.utdallas.whoosh.appservices.Contact;
+
 /**
  * Service interface that provides functionality to retrieve {@link IContact} information.
  *
@@ -12,6 +14,6 @@ public interface IDirectoryService {
     /**
      * returns all available {@link IContact}s
      */
-    List<IContact> getContacts();
+    List<Contact> getContacts();
 
 }

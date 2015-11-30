@@ -1,0 +1,3 @@
+0;Office of Student Accessibility;(972) 883-2098;studentaccess@utdallas.edu;www.utdallas.edu/studentaccess/
+1;Dean of Students;(972) 883-6391;dos@utdallas.edu;www.utdallas.edu/deanofstudents/
+2;Emergency Services;9-1-1; ;
