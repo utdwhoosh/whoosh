@@ -17,7 +17,7 @@ public interface IMapImage {
     BitmapDescriptor getImage();
 
     LatLng getBottomLeftCoordinates();
-    LatLng getTomRightCoordinates();
+    LatLng getTopRightCoordinates();
 
     INodeGroup getGroup();
     Integer getFloor();

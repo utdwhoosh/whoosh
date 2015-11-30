@@ -20,20 +20,15 @@ import android.widget.Toast;
 
 import com.parse.Parse;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.IRoute;
-import edu.utdallas.whoosh.api.NodeType;
 import edu.utdallas.whoosh.api.RouteType;
 import edu.utdallas.whoosh.appservices.Callback;
 import edu.utdallas.whoosh.appservices.InitService;
 import edu.utdallas.whoosh.appservices.LocationService;
-import edu.utdallas.whoosh.appservices.NodeManager;
-import edu.utdallas.whoosh.appservices.Route;
 import edu.utdallas.whoosh.appservices.RoutingService;
 
 public class MainActivity extends AppCompatActivity  {
@@ -90,7 +85,7 @@ public class MainActivity extends AppCompatActivity  {
                     @Override
                     public void call(boolean success) {
                         if (success) {
-                            map.drawBuildings();
+                            map.initMap();
                             routingService = new RoutingService();
                         }
                     }

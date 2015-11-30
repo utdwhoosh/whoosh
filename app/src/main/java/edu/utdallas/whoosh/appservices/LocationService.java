@@ -4,12 +4,11 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.security.acl.Group;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import edu.utdallas.whoosh.api.GroupType;
 import edu.utdallas.whoosh.api.ILocationService;
@@ -67,81 +66,41 @@ public class LocationService implements ILocationService {
         NodeManager manager = NodeManager.getInstance();
         HashSet<Node> tempSet = new HashSet<Node>();
 
-
-
-        /*Iterator<NodeType> typeIterator = types.listIterator();
-        while(typeIterator.hasNext())
-        {
-            tempSet.addAll(manager.getNodesFromType(typeIterator.next()));
-        }*/
-        try{
-            tempSet.addAll(manager.doNodeQuery(query));
+        if (query != null) {
+            try {
+                tempSet.addAll(manager.doNodeQuery(query));
+            } catch (Exception e) {
+            }
+        } else {
+            tempSet.addAll(manager.getNodes());
         }
-        catch(Exception e){}
+
+        Iterator<Node> i = tempSet.iterator();
+        while (i.hasNext()) {
+            Node n = i.next();
+            if (types.contains(n.getType()) != true) {
+                i.remove();
+            }
+        }
 
         return new ArrayList<INode>(tempSet);
     }
 
     @Override //Not tested
     public List<INode> searchNodesByTypesAndGroup(String query, List<NodeType> types, INodeGroup group) {
-        NodeManager manager = NodeManager.getInstance();
-        Node currNode;
-
         HashSet<INode> tempSet = new HashSet<INode>();
-        /*tempSet.addAll(manager.getNodesFromGroup((NodeGroup)group));
-        Iterator<Node> groupIterator = nodesByGroup.listIterator();
-        Iterator<NodeType> typeIterator;
 
-        while(groupIterator.hasNext())
-        {
-            currNode = groupIterator.next();
-            typeIterator = types.listIterator();
-            while(typeIterator.hasNext())
-            {
-                if(currNode.getType() == typeIterator.next())
-                {
-                    tempSet.add(currNode);
-                }
-            }
-        }*/
-        if(query==null){
-            tempSet.addAll(NodeManager.getInstance().getNodesFromGroup((NodeGroup)group));
-        }
-        else {
-            for(INode n: searchNodesByTypes(query, types)){
-                if(n.getGroup().getId().compareTo(group.getId()) == 0){
-                    tempSet.add(n);
-                }
+        for(INode n : searchNodesByTypes(query, types)){
+            if(n.getGroup().getId().compareTo(group.getId()) == 0){
+                tempSet.add(n);
             }
         }
+
         return new ArrayList<INode>(tempSet);
     }
 
     @Override //Not tested
     public List<INode> getNodesByTypesAndGroupAndFloor(List<NodeType> types, INodeGroup group, Integer floor) {
-        /*Node currNode;
-        List<Node> result = new ArrayList<>();
-        Iterator<NodeType> typeIterator;
-        NodeManager manager = NodeManager.getInstance();
-
-        List<Node> nodesByGroup = manager.getNodesFromGroup((NodeGroup)group);
-        Iterator<Node> groupIterator = nodesByGroup.listIterator();
-
-        while(groupIterator.hasNext())
-        {
-            currNode = groupIterator.next();
-            typeIterator = types.listIterator();
-            while(typeIterator.hasNext())
-            {
-                if(currNode.getType() == typeIterator.next())
-                {
-                    if(currNode.getFloor().equals(floor))
-                    {
-                        result.add(currNode);
-                    }
-                }
-            }
-        }*/
         HashSet<INode> tempSet = new HashSet<INode>();
 
         for(INode n: searchNodesByTypesAndGroup(null, types, group)){
@@ -149,6 +108,7 @@ public class LocationService implements ILocationService {
                 tempSet.add(n);
             }
         }
+
         return new ArrayList<INode>(tempSet);
     }
 

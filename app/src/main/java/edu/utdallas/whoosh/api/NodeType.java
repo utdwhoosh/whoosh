@@ -15,7 +15,7 @@ public enum NodeType {
     Ramp(false, true),
     Skybridge,
     Elevator(false, true),
-    Door,
+    Door(false, true),
     Room(true, false),
     Restroom,
     Stair,

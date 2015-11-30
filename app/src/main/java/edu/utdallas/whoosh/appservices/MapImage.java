@@ -41,7 +41,7 @@ public class MapImage implements IMapImage
     }
 
     @Override
-    public LatLng getTomRightCoordinates() {
+    public LatLng getTopRightCoordinates() {
         return this.topRight;
     }
 
