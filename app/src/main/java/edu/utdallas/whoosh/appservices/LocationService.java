@@ -3,6 +3,7 @@ package edu.utdallas.whoosh.appservices;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,6 +164,22 @@ public class LocationService implements ILocationService {
     @Override
     public IMapImage getGroupMap(INodeGroup group, Integer floor) {
         return mapImages.get(getImageKey(group, floor));
+    }
+
+    @Override
+    public INodeGroup getSpanningGroup(LatLng coordinates) {
+
+        INodeGroup result = null;
+
+        for (IMapImage image : mapImages.values()) {
+            LatLngBounds bounds = new LatLngBounds(image.getBottomLeftCoordinates(), image.getTopRightCoordinates());
+            if (bounds.contains(coordinates)) {
+                result = image.getGroup();
+                break;
+            }
+        }
+
+        return result;
     }
 
     public static LocationService getInstance() {

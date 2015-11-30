@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,8 +62,12 @@ public class RouteMap {
 
 
     public RouteMap(final Activity activity) {
+
         this.activity = activity;
 
+
+
+        // set up map
         map = ((MapFragment) activity.getFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
         map.setMyLocationEnabled(true);
@@ -72,12 +81,56 @@ public class RouteMap {
                 }
             }
         });
+
         // disable the toolbar that pops up in the bottom right when a marker is selected
         map.getUiSettings().setMapToolbarEnabled(false);
+
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                if (floorPlansShown) {
+                    final INodeGroup group = locationService.getSpanningGroup(latLng);
+                    if (group != null) {
+                        // show floor picker
+                        final View floorPicker = activity.getLayoutInflater().inflate(R.layout.floor_picker_layout, null);
+
+                        TextView tvGroupName = (TextView)floorPicker.findViewById(R.id.tvGroupName);
+                        tvGroupName.setText(group.getName());
+
+                        LinearLayout llFloors = (LinearLayout)floorPicker.findViewById(R.id.llFloors);
+
+                        for (final Integer floor : group.getFloors()) {
+                            Button button = new Button(activity);
+                            String label = floor.equals(buildingFloors.get(group)) ? ("["+floor+"]") : floor.toString();
+                            button.setText(label);
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ((RelativeLayout) activity.findViewById(R.id.mainLayout)).removeView(floorPicker);
+                                    RouteMap.this.drawFloorPlan(group, floor);
+                                }
+                            });
+                            llFloors.addView(button);
+                        }
+
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        params.addRule(RelativeLayout.CENTER_VERTICAL);
+                        ((RelativeLayout)activity.findViewById(R.id.mainLayout)).addView(floorPicker, params);
+                    }
+                }
+            }
+        });
+
+
 
         locationManager = (LocationManager) activity.getSystemService(activity.getApplicationContext().LOCATION_SERVICE);
 
         locationService = LocationService.getInstance();
+
+
 
         // load NodeGroup icons
         groupIcons.put(GroupType.Building, BitmapDescriptorFactory.fromResource(R.drawable.grouptype_building));
@@ -137,7 +190,7 @@ public class RouteMap {
                 Marker marker = map.addMarker(new MarkerOptions()
                                 .position(node.getCoordinates())
                                 .title(node.getType().name())
-                                .snippet("["+node.getId()+"]" + " " + node.getName())
+                                .snippet("[" + node.getId() + "]" + " " + node.getName())
                                 .icon(nodeIcons.get(node.getType()))
                                 .anchor(0.5f, 0.5f)
                 );

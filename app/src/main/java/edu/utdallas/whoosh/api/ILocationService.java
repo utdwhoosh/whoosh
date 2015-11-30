@@ -55,4 +55,5 @@ public interface ILocationService {
      */
     IMapImage getGroupMap(INodeGroup group, Integer floor);
 
+    INodeGroup getSpanningGroup(LatLng coordinates);
 }

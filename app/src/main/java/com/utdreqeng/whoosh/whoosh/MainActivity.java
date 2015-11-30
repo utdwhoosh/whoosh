@@ -2,10 +2,6 @@ package com.utdreqeng.whoosh.whoosh;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -32,15 +28,12 @@ import com.parse.Parse;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.jar.Attributes;
 
 import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.IRoute;
 import edu.utdallas.whoosh.api.NodeType;
 import edu.utdallas.whoosh.api.RouteType;
 import edu.utdallas.whoosh.appservices.Callback;
-import edu.utdallas.whoosh.appservices.Contact;
-import edu.utdallas.whoosh.appservices.DirectoryService;
 import edu.utdallas.whoosh.appservices.InitService;
 import edu.utdallas.whoosh.appservices.LocationService;
 import edu.utdallas.whoosh.appservices.RoutingService;
@@ -298,20 +291,6 @@ public class MainActivity extends AppCompatActivity  {
                 {
                     ((FloatingActionButton) findViewById(R.id.navButtonBottom)).setVisibility(View.INVISIBLE);
                     ((FloatingActionButton) findViewById(R.id.navButtonTop)).setVisibility(View.INVISIBLE);
-                }
-
-                if(id==2)
-
-                {
-                    ((FloatingActionButton) findViewById(R.id.upButton)).setVisibility(View.VISIBLE);
-                    ((FloatingActionButton) findViewById(R.id.downButton)).setVisibility(View.VISIBLE);
-                }
-
-                else
-
-                {
-                    ((FloatingActionButton) findViewById(R.id.upButton)).setVisibility(View.INVISIBLE);
-                    ((FloatingActionButton) findViewById(R.id.downButton)).setVisibility(View.INVISIBLE);
                 }
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
