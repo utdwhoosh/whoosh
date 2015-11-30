@@ -1,6 +1,7 @@
 package edu.utdallas.whoosh.appservices;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.utdreqeng.whoosh.whoosh.R;
 
@@ -51,13 +52,14 @@ public class DirectoryService implements IDirectoryService{
         String fileInput;
         String[] contactComponents;
         List<Contact> contacts = new ArrayList<>();
-        Contact currContact = new Contact();
 
         try {
             Scanner contactsFileReader = new Scanner(ct.getResources().openRawResource(R.raw.contacts));
             while(contactsFileReader.hasNextLine())
             {
                 fileInput = contactsFileReader.nextLine();
+                Contact currContact = new Contact();
+
                 if(fileInput.contains(";"))
                 {
                     contactComponents = fileInput.split(";");

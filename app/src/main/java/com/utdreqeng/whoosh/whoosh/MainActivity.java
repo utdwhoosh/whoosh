@@ -98,10 +98,6 @@ public class MainActivity extends AppCompatActivity  {
                         if (success) {
                             map.initMap();
                             routingService = new RoutingService();
-
-                            for(Contact c: new DirectoryService(getApplicationContext()).getContacts()){
-                                Log.d("MainActivity","Contact: "+c.getId()+" name: "+c.getName());
-                            }
                         }
                     }
                 }
