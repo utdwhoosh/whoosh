@@ -1,6 +1,6 @@
 package com.utdreqeng.whoosh.whoosh;
 
-import android.app.Activity;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -22,6 +22,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ import edu.utdallas.whoosh.api.GroupType;
 import edu.utdallas.whoosh.api.IMapImage;
 import edu.utdallas.whoosh.api.INode;
 import edu.utdallas.whoosh.api.INodeGroup;
+import edu.utdallas.whoosh.api.IRoute;
 import edu.utdallas.whoosh.api.NodeType;
 import edu.utdallas.whoosh.appservices.LocationService;
 
@@ -41,7 +44,7 @@ import edu.utdallas.whoosh.appservices.LocationService;
 
 public class RouteMap {
 
-    private Activity activity;
+    private MainActivity activity;
 
     private GoogleMap map;
     private LocationManager locationManager;
@@ -60,8 +63,11 @@ public class RouteMap {
     private Map<INodeGroup, List<Marker>> buildingMarkers = new HashMap<>();
     private Map<INodeGroup, Integer> buildingFloors = new HashMap<>();
 
+    private List<Marker> routeMarkers = new ArrayList<>();
+    private Polyline routeLine;
 
-    public RouteMap(final Activity activity) {
+
+    public RouteMap(final MainActivity activity) {
 
         this.activity = activity;
 
@@ -94,14 +100,14 @@ public class RouteMap {
                         // show floor picker
                         final View floorPicker = activity.getLayoutInflater().inflate(R.layout.floor_picker_layout, null);
 
-                        TextView tvGroupName = (TextView)floorPicker.findViewById(R.id.tvGroupName);
+                        TextView tvGroupName = (TextView) floorPicker.findViewById(R.id.tvGroupName);
                         tvGroupName.setText(group.getName());
 
-                        LinearLayout llFloors = (LinearLayout)floorPicker.findViewById(R.id.llFloors);
+                        LinearLayout llFloors = (LinearLayout) floorPicker.findViewById(R.id.llFloors);
 
                         for (final Integer floor : group.getFloors()) {
                             Button button = new Button(activity);
-                            String label = floor.equals(buildingFloors.get(group)) ? ("["+floor+"]") : floor.toString();
+                            String label = floor.equals(buildingFloors.get(group)) ? ("[" + floor + "]") : floor.toString();
                             button.setText(label);
                             button.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -118,7 +124,7 @@ public class RouteMap {
                                 RelativeLayout.LayoutParams.WRAP_CONTENT
                         );
                         params.addRule(RelativeLayout.CENTER_VERTICAL);
-                        ((RelativeLayout)activity.findViewById(R.id.mainLayout)).addView(floorPicker, params);
+                        ((RelativeLayout) activity.findViewById(R.id.mainLayout)).addView(floorPicker, params);
                     }
                 }
             }
@@ -127,7 +133,6 @@ public class RouteMap {
 
 
         locationManager = (LocationManager) activity.getSystemService(activity.getApplicationContext().LOCATION_SERVICE);
-
         locationService = LocationService.getInstance();
 
 
@@ -285,5 +290,65 @@ public class RouteMap {
 
     public LatLng getLastLocation(){
         return loc;
+    }
+
+    public void drawRoute(IRoute route) {
+
+        // erase any current route
+        eraseRoute();
+
+        // draw origin/destination
+        Marker marker = this.map.addMarker(new MarkerOptions()
+                        .position(route.getOrigin().getCoordinates())
+                        .title(route.getOrigin().getType().name())
+                        .snippet("[" + route.getOrigin().getId() + "]" + " " + route.getOrigin().getName())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.route_start))
+                        .anchor(0.5f, 0.5f)
+        );
+        this.routeMarkers.add(marker);
+        marker = this.map.addMarker(new MarkerOptions()
+                        .position(route.getDestination().getCoordinates())
+                        .title(route.getDestination().getType().name())
+                        .snippet("[" + route.getDestination().getId() + "]" + " " + route.getDestination().getName())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.route_finish))
+                        .anchor(0.5f, 0.5f)
+        );
+        this.routeMarkers.add(marker);
+
+        // draw polyline
+        LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
+        List<LatLng> points = new ArrayList<>();
+        for (INode node : route.getPath()) {
+            points.add(node.getCoordinates());
+            boundsBuilder.include(node.getCoordinates());
+        }
+        this.routeLine = this.map.addPolyline(new PolylineOptions()
+                        .addAll(points)
+                        .width(20)
+                        .color(Color.BLUE)
+        );
+
+        // zoom map on route
+        map.moveCamera(
+                CameraUpdateFactory.newLatLngBounds(
+                        boundsBuilder.build(),
+                        200
+                )
+        );
+    }
+
+    public void eraseRoute() {
+
+        // remove origin/destination markers
+        for (Marker marker : this.routeMarkers) {
+            marker.remove();
+        }
+        this.routeMarkers.clear();
+
+        // remove polyline
+        if (this.routeLine != null) {
+            this.routeLine.remove();
+        }
+        this.routeLine = null;
     }
 }

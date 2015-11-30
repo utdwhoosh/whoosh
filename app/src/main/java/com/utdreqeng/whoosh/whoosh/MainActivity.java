@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,8 +46,8 @@ public class MainActivity extends AppCompatActivity  {
     private View lastTopBar = null;
     private int lastTopId = 0;
     private RouteMap map;
+
     private RoutingService routingService;
-    //private Route currentRoute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-    private void showBottomBar(float time, INode destination){
+    public void showBottomBar(float time, INode destination){
 
         View temp = findViewById(R.id.bottomBar);
         double rTime = Math.round(time * 100f) / 100;
@@ -139,11 +138,11 @@ public class MainActivity extends AppCompatActivity  {
         ((TextView)temp.findViewById(R.id.bottom_eta)).setText("ETA: " + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE));
     }
 
-    private void hideBottomBar(){
+    public void hideBottomBar(){
         findViewById(R.id.bottomBar).setVisibility(View.INVISIBLE);
     }
 
-    private void setTopBar(int id){
+    public void setTopBar(int id){
 
         View temp = null;
         hideBottomBar();
@@ -247,14 +246,12 @@ public class MainActivity extends AppCompatActivity  {
                                         hideBottomBar();
                                     } else {
                                         INode end = endPoints.get(0);
-                                        IRoute temp = routingService.getRoute(start, end, RouteType.Walking);
-                                        showBottomBar(temp.getTimeInMinutes(), end);
+                                        IRoute route = routingService.getRoute(start, end, RouteType.Wheelchair);
 
-                                        String s = "";
-                                        for (INode n : temp.getPath()) {
-                                            s = s + n.getId() + ",";
-                                        }
-                                        Log.d("MainActivity", "Path: " + s);
+                                        map.drawRoute(route);
+
+                                        // show bottom bar
+                                        showBottomBar(route.getTimeInMinutes(), end);
                                     }
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Invalid start point", Toast.LENGTH_SHORT).show();
@@ -268,6 +265,12 @@ public class MainActivity extends AppCompatActivity  {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
                             if (event.getAction() == MotionEvent.ACTION_UP) {
+                                map.eraseRoute();
+
+                                // hide bottom bar
+                                hideBottomBar();
+
+                                // show default top bar
                                 setTopBar(0);
                             }
                             return false;
@@ -275,41 +278,41 @@ public class MainActivity extends AppCompatActivity  {
                     });
                     break;
 
-                    default:
-                    break;
-                }
+            default:
+            break;
+        }
 
-                if(id==0||id==1)
+        if(id==0||id==1)
 
-                {
-                    ((FloatingActionButton) findViewById(R.id.navButtonBottom)).setVisibility(View.VISIBLE);
-                    ((FloatingActionButton) findViewById(R.id.navButtonTop)).setVisibility(View.VISIBLE);
-                }
+        {
+            ((FloatingActionButton) findViewById(R.id.navButtonBottom)).setVisibility(View.VISIBLE);
+            ((FloatingActionButton) findViewById(R.id.navButtonTop)).setVisibility(View.VISIBLE);
+        }
 
-                else
+        else
 
-                {
-                    ((FloatingActionButton) findViewById(R.id.navButtonBottom)).setVisibility(View.INVISIBLE);
-                    ((FloatingActionButton) findViewById(R.id.navButtonTop)).setVisibility(View.INVISIBLE);
-                }
+        {
+            ((FloatingActionButton) findViewById(R.id.navButtonBottom)).setVisibility(View.INVISIBLE);
+            ((FloatingActionButton) findViewById(R.id.navButtonTop)).setVisibility(View.INVISIBLE);
+        }
 
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-                ((RelativeLayout)
+        ((RelativeLayout)
 
-                findViewById(R.id.mainLayout)
+        findViewById(R.id.mainLayout)
 
-                ).
+        ).
 
-                addView(temp, params);
+        addView(temp, params);
 
-                lastTopBar=temp;
-                lastTopId=id;
-            }
+        lastTopBar=temp;
+        lastTopId=id;
+    }
 
-        private void openKeyboard(){
+    private void openKeyboard(){
         ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
                 InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
