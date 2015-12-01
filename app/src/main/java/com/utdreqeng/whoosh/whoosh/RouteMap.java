@@ -303,7 +303,7 @@ public class RouteMap {
                         .position(route.getOrigin().getCoordinates())
                         .title(route.getOrigin().getType().name())
                         .snippet("[" + route.getOrigin().getId() + "]" + " " + route.getOrigin().getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.route_start))
                         .anchor(0.5f, 0.5f)
         );
         this.routeMarkers.add(marker);
@@ -311,7 +311,7 @@ public class RouteMap {
                         .position(route.getDestination().getCoordinates())
                         .title(route.getDestination().getType().name())
                         .snippet("[" + route.getDestination().getId() + "]" + " " + route.getDestination().getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.finish))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.route_finish))
                         .anchor(0.5f, 0.5f)
         );
         this.routeMarkers.add(marker);
